@@ -1,0 +1,2580 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Yasemin & Elif" />
+  <meta id="theme-color-meta" name="theme-color" content="#fff1f2" />
+  <title>Yasemin & Elif — Aile Döngü Takip</title>
+
+  <!-- Inter Font with System Fallbacks -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS with Class-Based Dark Mode -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Base typography and smooth mobile touch behavior */
+    html, body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      overscroll-behavior-y: none;
+    }
+    .safe-top {
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+    .safe-bottom {
+      padding-bottom: max(env(safe-area-inset-bottom, 0px), 12px);
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Bottom sheet entrance animation */
+    @keyframes slideUp {
+      from { transform: translateY(100%); opacity: 0.6; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-up {
+      animation: slideUp 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Striped patterns for projected period dates (Light & Dark) */
+    .bg-striped-rose {
+      background-image: repeating-linear-gradient(
+        -45deg,
+        #ffe4e6,
+        #ffe4e6 4px,
+        #fff1f2 4px,
+        #fff1f2 8px
+      );
+    }
+    .dark .bg-striped-rose {
+      background-image: repeating-linear-gradient(
+        -45deg,
+        rgba(225, 29, 72, 0.26),
+        rgba(225, 29, 72, 0.26) 4px,
+        rgba(225, 29, 72, 0.12) 4px,
+        rgba(225, 29, 72, 0.12) 8px
+      );
+    }
+    .bg-striped-violet {
+      background-image: repeating-linear-gradient(
+        -45deg,
+        #ede9fe,
+        #ede9fe 4px,
+        #f5f3ff 4px,
+        #f5f3ff 8px
+      );
+    }
+    .dark .bg-striped-violet {
+      background-image: repeating-linear-gradient(
+        -45deg,
+        rgba(124, 58, 237, 0.28),
+        rgba(124, 58, 237, 0.28) 4px,
+        rgba(124, 58, 237, 0.12) 4px,
+        rgba(124, 58, 237, 0.12) 8px
+      );
+    }
+
+    /* Clean A4 Print Layout for Doctor Report */
+    #print-report-root {
+      display: none;
+    }
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 14mm;
+      }
+      html, body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+      #app-shell, #modal-overlay, #toast, #pin-lock-screen {
+        display: none !important;
+      }
+      #print-report-root {
+        display: block !important;
+        width: 100% !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+      }
+      .print-avoid-break {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex justify-center transition-colors duration-200">
+
+  <!-- Main Mobile App Shell (Centered 480px on Desktop, Fullscreen on Mobile) -->
+  <div id="app-shell" class="w-full max-w-[480px] min-h-screen bg-[#faf9fb] dark:bg-slate-900 sm:shadow-2xl flex flex-col relative overflow-x-hidden transition-colors duration-200">
+
+    <!-- Top Header -->
+    <header id="app-header" class="sticky top-0 z-30 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200/70 dark:border-slate-800 px-4 py-3 safe-top flex items-center justify-between">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-rose-600 to-violet-600 flex items-center justify-center text-white shadow-sm shrink-0">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+          </svg>
+        </div>
+        <div class="min-w-0">
+          <h1 id="header-title" class="text-base font-bold text-slate-900 dark:text-white leading-tight truncate">Anasayfa</h1>
+          <p id="header-date" class="text-[11px] font-medium text-slate-500 dark:text-slate-400 truncate"></p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-1.5 shrink-0">
+        <!-- Quick Dark Mode Toggle -->
+        <button id="btn-theme-toggle" onclick="toggleDarkMode()" class="p-2 rounded-xl text-slate-500 dark:text-amber-300 hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition" title="Koyu / Aydınlık Mod">
+          <svg id="icon-moon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+          </svg>
+          <svg id="icon-sun" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+          </svg>
+        </button>
+
+        <!-- Manual PIN Lock Button -->
+        <button id="btn-quick-lock" onclick="lockAppManually()" class="hidden p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition" title="Uygulamayı Kilitle">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+          </svg>
+        </button>
+
+        <!-- Quick Add Period -->
+        <button onclick="openAddPeriodModal()" class="px-3 py-1.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-semibold flex items-center gap-1 shadow-sm active:scale-95 transition">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          <span>Regl Ekle</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Scrollable Content Area -->
+    <main id="main-content" class="flex-1 overflow-y-auto pb-24">
+      <!-- Views injected here -->
+    </main>
+
+    <!-- Bottom Tab Navigation -->
+    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200/80 dark:border-slate-800 px-2 pt-1.5 safe-bottom">
+      <div class="grid grid-cols-5 gap-1">
+        <button onclick="switchTab('home')" data-tab="home" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl transition">
+          <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+          </svg>
+          <span class="text-[10px] font-semibold">Anasayfa</span>
+        </button>
+
+        <button onclick="switchTab('calendar')" data-tab="calendar" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl transition">
+          <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+          </svg>
+          <span class="text-[10px] font-semibold">Takvim</span>
+        </button>
+
+        <button onclick="switchTab('analytics')" data-tab="analytics" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl transition">
+          <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+          </svg>
+          <span class="text-[10px] font-semibold">Analiz</span>
+        </button>
+
+        <button onclick="switchTab('diary')" data-tab="diary" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl transition">
+          <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+          </svg>
+          <span class="text-[10px] font-semibold">Günlük</span>
+        </button>
+
+        <button onclick="switchTab('settings')" data-tab="settings" class="nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl transition">
+          <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <span class="text-[10px] font-semibold">Ayarlar</span>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Bottom Sheet / Modal Container -->
+  <div id="modal-overlay" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-[2px] hidden items-end sm:items-center justify-center" onclick="closeModalOnBackdrop(event)">
+    <div id="modal-content" class="w-full max-w-[480px] bg-white dark:bg-slate-900 dark:text-slate-100 rounded-t-3xl sm:rounded-3xl p-5 max-h-[90vh] overflow-y-auto shadow-2xl border border-transparent dark:border-slate-800 animate-slide-up">
+      <!-- Modal body injected dynamically -->
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed top-16 left-1/2 -translate-x-1/2 z-[70] px-4 py-2.5 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-semibold shadow-lg opacity-0 pointer-events-none transition-all duration-200 flex items-center gap-2 whitespace-nowrap">
+    <span id="toast-text">Kaydedildi</span>
+  </div>
+
+  <!-- PIN Lock Screen Overlay -->
+  <div id="pin-lock-screen" class="fixed inset-0 z-[60] bg-gradient-to-b from-rose-50 via-white to-violet-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 hidden flex-col items-center justify-center px-6">
+    <div class="w-full max-w-[320px] flex flex-col items-center">
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-600 to-violet-600 flex items-center justify-center text-white shadow-lg mb-4">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+        </svg>
+      </div>
+      <h2 id="pin-title" class="text-lg font-bold text-slate-900 dark:text-white mb-1">Uygulama Kilitli</h2>
+      <p id="pin-subtitle" class="text-xs text-slate-500 dark:text-slate-400 mb-6 text-center">Devam etmek için 4 haneli PIN kodunuzu girin</p>
+
+      <!-- PIN Dots -->
+      <div id="pin-dots" class="flex items-center gap-4 mb-6">
+        <div class="w-3.5 h-3.5 rounded-full border-2 border-slate-300 dark:border-slate-600 transition-all"></div>
+        <div class="w-3.5 h-3.5 rounded-full border-2 border-slate-300 dark:border-slate-600 transition-all"></div>
+        <div class="w-3.5 h-3.5 rounded-full border-2 border-slate-300 dark:border-slate-600 transition-all"></div>
+        <div class="w-3.5 h-3.5 rounded-full border-2 border-slate-300 dark:border-slate-600 transition-all"></div>
+      </div>
+      <p id="pin-error" class="text-xs font-semibold text-rose-600 dark:text-rose-400 h-4 mb-4"></p>
+
+      <!-- Numeric Keypad -->
+      <div class="grid grid-cols-3 gap-3.5 w-full">
+        <button onclick="pressPinKey('1')" class="h-14 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200/80 dark:border-slate-700 text-xl font-bold text-slate-800 dark:text-white active:scale-95 transition">1</button>
+        <button onclick="pressPinKey('2')" class="h-14 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200/80 dark:border-slate-700 text-xl font-bold text-slate-800 dark:text-white active:scale-95 transition">2</button>
+        <button onclick="pressPinKey('3')" class="h-14 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200/80 dark:border-slate-700 text-xl font-bold text-slate-800 dark:text-white active:scale-95 transition">3</button>
+        <button onclick="pressPinKey('4')" class="h-14 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200/80 dark:border-slate-700 text-xl font-bold text-slate-800 dark:text-white active:scale-95 transition">4</button>
+        <button onclick="pressPinKey('5')" class="h-14 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200/80 dark:border-slate-700 text-xl font-bold text-slate-800 dark:text-white active:scale-95 transition">5</button>
+        <button onclick="pressPinKey('6')" class="h-14 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200/80 dark:border-slate-700 text-xl font-bold text-slate-800 dark:text-white active:scale-95 transition">6</button>
+        <button onclick="pressPinKey('7')" class="h-14 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200/80 dark:border-slate-700 text-xl font-bold text-slate-800 dark:text-white active:scale-95 transition">7</button>
+        <button onclick="pressPinKey('8')" class="h-14 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200/80 dark:border-slate-700 text-xl font-bold text-slate-800 dark:text-white active:scale-95 transition">8</button>
+        <button onclick="pressPinKey('9')" class="h-14 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200/80 dark:border-slate-700 text-xl font-bold text-slate-800 dark:text-white active:scale-95 transition">9</button>
+        <button id="pin-cancel-btn" onclick="cancelPinSetup()" class="h-14 rounded-2xl text-xs font-semibold text-slate-500 dark:text-slate-400 active:scale-95 transition invisible">İptal</button>
+        <button onclick="pressPinKey('0')" class="h-14 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200/80 dark:border-slate-700 text-xl font-bold text-slate-800 dark:text-white active:scale-95 transition">0</button>
+        <button onclick="backspacePin()" class="h-14 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center active:scale-95 transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9.75L14.25 12m0 0l2.25 2.25M14.25 12l2.25-2.25M14.25 12L12 14.25m-2.58 4.92l-6.375-6.375a1.125 1.125 0 010-1.59L9.42 4.83c.211-.211.498-.33.796-.33H19.5a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25h-9.284c-.298 0-.585-.119-.796-.33z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dedicated Print-Only Container for A4 Doctor Report -->
+  <div id="print-report-root"></div>
+
+  <!-- Hidden File Input for JSON Restore -->
+  <input type="file" id="json-file-input" accept=".json,application/json" class="hidden" onchange="handleImportFile(event)" />
+
+  <script>
+    /* ============================================================================
+       1. CONSTANTS, TURKISH LOCALE & TIMEZONE-SAFE DATE ENGINE
+       ============================================================================ */
+    const STORAGE_KEY = 'yasemin_elif_aile_dongu_v3';
+
+    const TR_MONTHS = [
+      'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+      'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
+    ];
+    const TR_MONTHS_SHORT = [
+      'Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz',
+      'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'
+    ];
+    const TR_DAYS_SHORT = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
+    const TR_DAYS_FULL = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+
+    const FLOW_OPTIONS = [
+      { id: 'yok', label: 'Yok', icon: '⚪' },
+      { id: 'hafif', label: 'Hafif', icon: '💧' },
+      { id: 'orta', label: 'Orta', icon: '💧💧' },
+      { id: 'yogun', label: 'Yoğun', icon: '🩸' }
+    ];
+
+    const MED_OPTIONS = [
+      { id: 'agri_kesici', label: 'Ağrı Kesici', icon: '💊' },
+      { id: 'demir', label: 'Demir', icon: '🔴' },
+      { id: 'magnezyum', label: 'Magnezyum', icon: '🧪' },
+      { id: 'b12_vitamin', label: 'B12 / Vitamin', icon: '☀️' },
+      { id: 'sicak_su', label: 'Sıcak Su Torbası', icon: '🔥' },
+      { id: 'bitki_cayi', label: 'Bitki Çayı', icon: '🍵' }
+    ];
+
+    const SYMPTOM_OPTIONS = [
+      { id: 'kramp', label: 'Kramp', icon: '⚡' },
+      { id: 'bas_agrisi', label: 'Baş Ağrısı', icon: '🤕' },
+      { id: 'bel_agrisi', label: 'Bel Ağrısı', icon: '🦴' },
+      { id: 'siskinlik', label: 'Şişkinlik', icon: '🎈' },
+      { id: 'yorgunluk', label: 'Yorgunluk', icon: '🔋' },
+      { id: 'gogus_hassasiyeti', label: 'Göğüs Hassasiyeti', icon: '🌸' },
+      { id: 'mide_bulantisi', label: 'Mide Bulantısı', icon: '🤢' },
+      { id: 'akne_cilt', label: 'Akne / Cilt', icon: '✨' }
+    ];
+
+    const MOOD_OPTIONS = [
+      { id: 'iyi_mutlu', label: 'İyi / Mutlu', icon: '😊' },
+      { id: 'sakin', label: 'Sakin', icon: '😌' },
+      { id: 'hassas', label: 'Hassas', icon: '🥺' },
+      { id: 'stresli', label: 'Stresli', icon: '😣' },
+      { id: 'sinirli', label: 'Sinirli', icon: '😤' },
+      { id: 'halsiz', label: 'Halsiz', icon: '😴' },
+      { id: 'odaklanamiyor', label: 'Odaklanamıyor', icon: '💭' }
+    ];
+
+    // Theme palettes for Yasemin (rose/bordo) and Elif (violet/lavanta) with Dark Mode pairs
+    const THEMES = {
+      p1: {
+        name: 'rose',
+        cardBg: 'bg-gradient-to-br from-rose-50 via-white to-pink-50/80 dark:from-rose-950/35 dark:via-slate-800/90 dark:to-slate-800',
+        border: 'border-rose-200/80 dark:border-rose-900/50',
+        accentText: 'text-rose-700 dark:text-rose-300',
+        badgeBg: 'bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-200',
+        btnPrimary: 'bg-rose-600 hover:bg-rose-700 dark:bg-rose-600 dark:hover:bg-rose-500 text-white shadow-rose-200/70 dark:shadow-none',
+        btnSoft: 'bg-rose-100/80 hover:bg-rose-200/70 dark:bg-rose-900/35 dark:hover:bg-rose-900/55 text-rose-800 dark:text-rose-200',
+        barSolid: 'bg-rose-500',
+        pillActive: 'bg-rose-600 text-white shadow-sm',
+        hex: '#be185d',
+        hexDark: '#f43f5e',
+        hexLight: '#fda4af',
+        hexSoft: '#fff1f2',
+        hexSoftDark: 'rgba(244, 63, 94, 0.16)'
+      },
+      p2: {
+        name: 'violet',
+        cardBg: 'bg-gradient-to-br from-violet-50 via-white to-purple-50/80 dark:from-violet-950/35 dark:via-slate-800/90 dark:to-slate-800',
+        border: 'border-violet-200/80 dark:border-violet-900/50',
+        accentText: 'text-violet-700 dark:text-violet-300',
+        badgeBg: 'bg-violet-100 text-violet-800 dark:bg-violet-900/50 dark:text-violet-200',
+        btnPrimary: 'bg-violet-600 hover:bg-violet-700 dark:bg-violet-600 dark:hover:bg-violet-500 text-white shadow-violet-200/70 dark:shadow-none',
+        btnSoft: 'bg-violet-100/80 hover:bg-violet-200/70 dark:bg-violet-900/35 dark:hover:bg-violet-900/55 text-violet-800 dark:text-violet-200',
+        barSolid: 'bg-violet-500',
+        pillActive: 'bg-violet-600 text-white shadow-sm',
+        hex: '#7c3aed',
+        hexDark: '#a78bfa',
+        hexLight: '#c4b5fd',
+        hexSoft: '#f5f3ff',
+        hexSoftDark: 'rgba(139, 92, 246, 0.16)'
+      }
+    };
+
+    // Pure YYYY-MM-DD local date helpers (immune to DST / UTC shifts)
+    function toDateStr(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function parseDate(str) {
+      const [y, m, d] = str.split('-').map(Number);
+      return new Date(y, m - 1, d, 12, 0, 0);
+    }
+
+    function getTodayStr() {
+      return toDateStr(new Date());
+    }
+
+    function addDays(dateStr, days) {
+      const dt = parseDate(dateStr);
+      dt.setDate(dt.getDate() + days);
+      return toDateStr(dt);
+    }
+
+    function diffDays(startStr, endStr) {
+      const a = parseDate(startStr);
+      const b = parseDate(endStr);
+      return Math.round((b - a) / (1000 * 60 * 60 * 24));
+    }
+
+    function formatDateShort(dateStr) {
+      if (!dateStr) return '-';
+      const [y, m, d] = dateStr.split('-').map(Number);
+      return `${d} ${TR_MONTHS_SHORT[m - 1]} ${y}`;
+    }
+
+    function formatDateDayMonth(dateStr) {
+      if (!dateStr) return '-';
+      const [, m, d] = dateStr.split('-').map(Number);
+      return `${d} ${TR_MONTHS_SHORT[m - 1]}`;
+    }
+
+    function formatDateFull(dateStr) {
+      const dt = parseDate(dateStr);
+      return `${dt.getDate()} ${TR_MONTHS[dt.getMonth()]} ${dt.getFullYear()}, ${TR_DAYS_FULL[dt.getDay()]}`;
+    }
+
+    function generateId() {
+      return 'id_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 7);
+    }
+
+    /* ============================================================================
+       2. DEFAULT SAMPLE DATA & PERSISTENCE
+       ============================================================================ */
+    function createSampleData() {
+      const today = getTodayStr();
+
+      // Yasemin (p1): 4 realistic cycles anchored relative to today (so "Yaklaşıyor" or countdown looks alive)
+      // Let's place last period 28 days ago on a 30-day average -> 2 days left ("Yaklaşıyor" badge visible!)
+      const p1Start4 = addDays(today, -28);
+      const p1Ignored = addDays(today, -30); // 2-day irregular spotting marked ignored
+      const p1Start3 = addDays(today, -58); // 30-day cycle
+      const p1Start2 = addDays(today, -89); // 31-day cycle
+      const p1Start1 = addDays(today, -118); // 29-day cycle
+
+      // Elif (p2): Currently on Period Day 2 so both active & approaching states are showcased
+      const p2Start4 = addDays(today, -1); // Ongoing (Regl 2. Gün)
+      const p2Start3 = addDays(today, -30); // 29-day cycle
+      const p2Start2 = addDays(today, -61); // 31-day cycle
+      const p2Start1 = addDays(today, -90); // 29-day cycle
+
+      return {
+        isSampleData: true,
+        appearance: {
+          darkMode: false
+        },
+        security: {
+          pinEnabled: false,
+          pinCode: ''
+        },
+        profiles: {
+          p1: {
+            id: 'p1',
+            name: 'Yasemin',
+            defaultCycleLength: 30,
+            defaultPeriodLength: 5,
+            sadeMod: false,
+            periods: [
+              { id: 'p1_1', startDate: p1Start1, endDate: addDays(p1Start1, 4), ignored: false },
+              { id: 'p1_2', startDate: p1Start2, endDate: addDays(p1Start2, 4), ignored: false },
+              { id: 'p1_3', startDate: p1Start3, endDate: addDays(p1Start3, 4), ignored: false },
+              { id: 'p1_ign', startDate: p1Ignored, endDate: addDays(p1Ignored, 1), ignored: true },
+              { id: 'p1_4', startDate: p1Start4, endDate: addDays(p1Start4, 4), ignored: false }
+            ],
+            diary: {
+              [p1Start4]: {
+                flow: 'orta',
+                meds: ['agri_kesici', 'sicak_su'],
+                customMeds: ['Parol 18:30'],
+                symptoms: ['kramp', 'yorgunluk'],
+                moods: ['hassas'],
+                note: 'İlk gün biraz kramp vardı, sıcak su torbası ve ağrı kesici iyi geldi.'
+              },
+              [addDays(p1Start4, 1)]: {
+                flow: 'yogun',
+                meds: ['demir', 'bitki_cayi'],
+                customMeds: [],
+                symptoms: ['bel_agrisi', 'yorgunluk'],
+                moods: ['halsiz'],
+                note: 'Akşam papatya çayı içildi.'
+              },
+              [today]: {
+                flow: 'yok',
+                meds: ['magnezyum'],
+                customMeds: [],
+                symptoms: ['siskinlik'],
+                moods: ['sakin'],
+                note: 'Dönem yaklaşıyor, magnezyum takviyesi alındı.'
+              }
+            }
+          },
+          p2: {
+            id: 'p2',
+            name: 'Elif',
+            defaultCycleLength: 29,
+            defaultPeriodLength: 5,
+            sadeMod: true,
+            periods: [
+              { id: 'p2_1', startDate: p2Start1, endDate: addDays(p2Start1, 4), ignored: false },
+              { id: 'p2_2', startDate: p2Start2, endDate: addDays(p2Start2, 5), ignored: false },
+              { id: 'p2_3', startDate: p2Start3, endDate: addDays(p2Start3, 4), ignored: false },
+              { id: 'p2_4', startDate: p2Start4, endDate: null, ignored: false }
+            ],
+            diary: {
+              [p2Start4]: {
+                flow: 'hafif',
+                meds: ['sicak_su', 'bitki_cayi'],
+                customMeds: [],
+                symptoms: ['kramp', 'bel_agrisi'],
+                moods: ['halsiz'],
+                note: 'Okul çıkışı biraz dinlendi.'
+              },
+              [today]: {
+                flow: 'orta',
+                meds: ['agri_kesici', 'b12_vitamin'],
+                customMeds: ['Majezik 14:00'],
+                symptoms: ['kramp'],
+                moods: ['sakin'],
+                note: 'Öğleden sonra ağrısı azaldı.'
+              }
+            }
+          }
+        }
+      };
+    }
+
+    let appData = null;
+
+    let uiState = {
+      activeTab: 'home',
+      calendarMode: 'shared', // 'shared' | 'p1' | 'p2'
+      calendarYear: new Date().getFullYear(),
+      calendarMonth: new Date().getMonth(),
+      analyticsProfile: 'p1',
+      analyticsChartType: 'cycle', // 'cycle' | 'period'
+      analyticsLogTab: 'past', // 'past' | 'projected'
+      diaryProfile: 'p1',
+      diaryDate: getTodayStr()
+    };
+
+    function loadData() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          appData = JSON.parse(raw);
+          if (!appData.profiles || !appData.profiles.p1 || !appData.profiles.p2) {
+            throw new Error('Geçersiz veri');
+          }
+          if (!appData.appearance) appData.appearance = { darkMode: false };
+          if (!appData.security) appData.security = { pinEnabled: false, pinCode: '' };
+        } else {
+          appData = createSampleData();
+          saveData();
+        }
+      } catch (err) {
+        console.error('Veri yükleme hatası:', err);
+        appData = createSampleData();
+        saveData();
+      }
+      applyThemeClass();
+    }
+
+    function saveData() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+      } catch (err) {
+        showToast('Veri kaydedilirken hata oluştu', true);
+      }
+    }
+
+    function applyThemeClass() {
+      const isDark = Boolean(appData && appData.appearance && appData.appearance.darkMode);
+      const htmlEl = document.documentElement;
+      if (isDark) {
+        htmlEl.classList.add('dark');
+      } else {
+        htmlEl.classList.remove('dark');
+      }
+      const meta = document.getElementById('theme-color-meta');
+      if (meta) meta.setAttribute('content', isDark ? '#0f172a' : '#fff1f2');
+
+      const moonIcon = document.getElementById('icon-moon');
+      const sunIcon = document.getElementById('icon-sun');
+      if (moonIcon && sunIcon) {
+        moonIcon.classList.toggle('hidden', isDark);
+        sunIcon.classList.toggle('hidden', !isDark);
+      }
+    }
+
+    function toggleDarkMode() {
+      appData.appearance.darkMode = !appData.appearance.darkMode;
+      saveData();
+      applyThemeClass();
+      renderApp();
+    }
+
+    /* ============================================================================
+       3. CYCLE CALCULATION ENGINE
+       ============================================================================ */
+    function computeProfileStats(profile) {
+      const today = getTodayStr();
+      const sorted = [...profile.periods].sort((a, b) => a.startDate.localeCompare(b.startDate));
+      const validPeriods = sorted.filter(p => !p.ignored);
+      const ignoredCount = sorted.filter(p => p.ignored).length;
+
+      const cycleIntervals = [];
+      let prevValidStart = null;
+      const enrichedPeriods = sorted.map((p, idx) => {
+        const duration = p.endDate
+          ? Math.max(1, diffDays(p.startDate, p.endDate) + 1)
+          : Math.max(1, diffDays(p.startDate, today) + 1);
+
+        let cycleLen = null;
+        if (p.ignored) {
+          if (idx > 0) {
+            cycleLen = Math.max(1, diffDays(sorted[idx - 1].startDate, p.startDate));
+          }
+        } else {
+          if (prevValidStart) {
+            cycleLen = Math.max(1, diffDays(prevValidStart, p.startDate));
+            cycleIntervals.push(cycleLen);
+          }
+          prevValidStart = p.startDate;
+        }
+        return { ...p, duration, cycleLen };
+      });
+
+      const avgCycleLength = cycleIntervals.length > 0
+        ? Math.round(cycleIntervals.reduce((s, v) => s + v, 0) / cycleIntervals.length)
+        : (profile.defaultCycleLength || 28);
+
+      const minCycleLength = cycleIntervals.length > 0 ? Math.min(...cycleIntervals) : avgCycleLength;
+      const maxCycleLength = cycleIntervals.length > 0 ? Math.max(...cycleIntervals) : avgCycleLength;
+
+      const completedValidDurations = enrichedPeriods
+        .filter(p => !p.ignored && p.endDate)
+        .map(p => p.duration);
+
+      const avgPeriodLength = completedValidDurations.length > 0
+        ? Math.round(completedValidDurations.reduce((s, v) => s + v, 0) / completedValidDurations.length)
+        : (profile.defaultPeriodLength || 5);
+
+      const ongoingPeriod = [...validPeriods].reverse().find(p => !p.endDate && p.startDate <= today) || null;
+      const lastValidPeriod = validPeriods.length > 0 ? validPeriods[validPeriods.length - 1] : null;
+
+      let isOnPeriod = false;
+      let currentPeriodDay = 0;
+      let currentCycleDay = 0;
+      let nextProjectedStart = null;
+      let daysUntilNext = null;
+      let statusKind = 'empty'; // 'active' | 'approaching' | 'today' | 'late' | 'countdown' | 'empty'
+      let statusLabel = 'Kayıt Yok';
+      let statusSubLabel = 'İlk regl kaydınızı ekleyin';
+
+      if (ongoingPeriod) {
+        isOnPeriod = true;
+        statusKind = 'active';
+        currentPeriodDay = Math.max(1, diffDays(ongoingPeriod.startDate, today) + 1);
+        currentCycleDay = currentPeriodDay;
+        nextProjectedStart = addDays(ongoingPeriod.startDate, avgCycleLength);
+        daysUntilNext = diffDays(today, nextProjectedStart);
+        statusLabel = `Regl ${currentPeriodDay}. Gün`;
+        statusSubLabel = `Başlangıç: ${formatDateShort(ongoingPeriod.startDate)}`;
+      } else if (lastValidPeriod) {
+        const daysSinceStart = diffDays(lastValidPeriod.startDate, today);
+        if (lastValidPeriod.endDate && today >= lastValidPeriod.startDate && today <= lastValidPeriod.endDate) {
+          isOnPeriod = true;
+          statusKind = 'active';
+          currentPeriodDay = daysSinceStart + 1;
+          currentCycleDay = currentPeriodDay;
+          nextProjectedStart = addDays(lastValidPeriod.startDate, avgCycleLength);
+          daysUntilNext = diffDays(today, nextProjectedStart);
+          statusLabel = `Regl ${currentPeriodDay}. Gün`;
+          statusSubLabel = `Bitiş: ${formatDateShort(lastValidPeriod.endDate)}`;
+        } else {
+          currentCycleDay = Math.max(1, daysSinceStart + 1);
+          nextProjectedStart = addDays(lastValidPeriod.startDate, avgCycleLength);
+          daysUntilNext = diffDays(today, nextProjectedStart);
+          if (daysUntilNext > 3) {
+            statusKind = 'countdown';
+            statusLabel = `${daysUntilNext} Gün Kaldı`;
+            statusSubLabel = `Tahmini: ${formatDateShort(nextProjectedStart)}`;
+          } else if (daysUntilNext >= 1 && daysUntilNext <= 3) {
+            statusKind = 'approaching';
+            statusLabel = `${daysUntilNext} Gün Kaldı`;
+            statusSubLabel = `Tahmini: ${formatDateShort(nextProjectedStart)}`;
+          } else if (daysUntilNext === 0) {
+            statusKind = 'today';
+            statusLabel = 'Bugün Bekleniyor';
+            statusSubLabel = `Tahmini: ${formatDateShort(nextProjectedStart)}`;
+          } else {
+            statusKind = 'late';
+            statusLabel = `${Math.abs(daysUntilNext)} Gün Gecikti`;
+            statusSubLabel = `Beklenen: ${formatDateShort(nextProjectedStart)}`;
+          }
+        }
+      }
+
+      // Generate 6 future projected periods
+      const projectedPeriods = [];
+      if (nextProjectedStart) {
+        let projStart = nextProjectedStart;
+        for (let i = 0; i < 6; i++) {
+          const projEnd = addDays(projStart, avgPeriodLength - 1);
+          projectedPeriods.push({
+            startDate: projStart,
+            endDate: projEnd,
+            cycleLen: avgCycleLength,
+            duration: avgPeriodLength
+          });
+          projStart = addDays(projStart, avgCycleLength);
+        }
+      }
+
+      // Fast calendar lookup maps
+      const loggedDaysMap = {};
+      sorted.forEach(p => {
+        const end = p.endDate ? p.endDate : (p.startDate <= today ? today : p.startDate);
+        const span = Math.min(35, Math.max(0, diffDays(p.startDate, end)));
+        for (let d = 0; d <= span; d++) {
+          const ds = addDays(p.startDate, d);
+          loggedDaysMap[ds] = { dayNum: d + 1, periodId: p.id, ignored: p.ignored };
+        }
+      });
+
+      const projectedDaysMap = {};
+      projectedPeriods.forEach(pp => {
+        for (let d = 0; d < pp.duration; d++) {
+          const ds = addDays(pp.startDate, d);
+          if (!loggedDaysMap[ds]) {
+            projectedDaysMap[ds] = { dayNum: d + 1 };
+          }
+        }
+      });
+
+      const fertileDaysMap = {};
+      if (!profile.sadeMod && nextProjectedStart) {
+        const anchors = [nextProjectedStart, ...projectedPeriods.slice(1).map(p => p.startDate)];
+        anchors.forEach(anchorNextStart => {
+          const ovulDate = addDays(anchorNextStart, -14);
+          for (let offset = -5; offset <= 1; offset++) {
+            const fd = addDays(ovulDate, offset);
+            if (!loggedDaysMap[fd]) {
+              fertileDaysMap[fd] = (offset === 0) ? 'ovulation' : 'fertile';
+            }
+          }
+        });
+      }
+
+      const ovulationCycleDay = Math.max(1, avgCycleLength - 14);
+
+      return {
+        enrichedPeriods,
+        validPeriods,
+        ignoredCount,
+        avgCycleLength,
+        minCycleLength,
+        maxCycleLength,
+        avgPeriodLength,
+        ongoingPeriod,
+        lastValidPeriod,
+        isOnPeriod,
+        currentPeriodDay,
+        currentCycleDay,
+        nextProjectedStart,
+        daysUntilNext,
+        statusKind,
+        statusLabel,
+        statusSubLabel,
+        projectedPeriods,
+        loggedDaysMap,
+        projectedDaysMap,
+        fertileDaysMap,
+        ovulationCycleDay
+      };
+    }
+
+    function hasDiaryData(entry) {
+      if (!entry) return false;
+      return Boolean(
+        (entry.flow && entry.flow !== 'yok') ||
+        (entry.meds && entry.meds.length) ||
+        (entry.customMeds && entry.customMeds.length) ||
+        (entry.symptoms && entry.symptoms.length) ||
+        (entry.moods && entry.moods.length) ||
+        (entry.note && entry.note.trim())
+      );
+    }
+
+    /* ============================================================================
+       4. NAVIGATION & RENDER ORCHESTRATOR
+       ============================================================================ */
+    const TAB_TITLES = {
+      home: 'Yasemin & Elif',
+      calendar: 'Takvim',
+      analytics: 'Analiz & Rapor',
+      diary: 'Günlük & İlaçlar',
+      settings: 'Ayarlar & Gizlilik'
+    };
+
+    function switchTab(tab) {
+      uiState.activeTab = tab;
+      renderApp();
+      document.getElementById('main-content').scrollTop = 0;
+    }
+
+    function openProfileDetail(profileId, targetTab = 'calendar') {
+      if (targetTab === 'calendar') {
+        uiState.calendarMode = profileId;
+        switchTab('calendar');
+      } else if (targetTab === 'analytics') {
+        uiState.analyticsProfile = profileId;
+        switchTab('analytics');
+      } else if (targetTab === 'diary') {
+        uiState.diaryProfile = profileId;
+        uiState.diaryDate = getTodayStr();
+        switchTab('diary');
+      }
+    }
+
+    function renderApp() {
+      document.getElementById('header-title').textContent = TAB_TITLES[uiState.activeTab] || 'Döngü Takip';
+      document.getElementById('header-date').textContent = formatDateFull(getTodayStr());
+
+      const lockBtn = document.getElementById('btn-quick-lock');
+      lockBtn.classList.toggle('hidden', !appData.security.pinEnabled);
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        const isActive = btn.dataset.tab === uiState.activeTab;
+        btn.className = `nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl transition ${
+          isActive
+            ? 'text-rose-600 dark:text-rose-400 bg-rose-50/80 dark:bg-rose-950/40'
+            : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'
+        }`;
+      });
+
+      const container = document.getElementById('main-content');
+      switch (uiState.activeTab) {
+        case 'home':
+          container.innerHTML = renderHomeView();
+          break;
+        case 'calendar':
+          container.innerHTML = renderCalendarView();
+          break;
+        case 'analytics':
+          container.innerHTML = renderAnalyticsView();
+          break;
+        case 'diary':
+          container.innerHTML = renderDiaryView();
+          break;
+        case 'settings':
+          container.innerHTML = renderSettingsView();
+          break;
+      }
+    }
+
+    /* ============================================================================
+       5. VIEW 1: ANASAYFA (SPLIT-SCREEN WITH SMART STATUS BADGES)
+       ============================================================================ */
+    function renderHomeView() {
+      const p1 = appData.profiles.p1;
+      const p2 = appData.profiles.p2;
+      const s1 = computeProfileStats(p1);
+      const s2 = computeProfileStats(p2);
+
+      const sampleNotice = appData.isSampleData ? `
+        <div class="mx-3.5 mt-3 px-3.5 py-2 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/60 flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2 text-[11px] text-amber-900 dark:text-amber-200">
+            <span>✨</span>
+            <span>Örnek veriler yüklü. Ayarlar'dan temizleyip kendi tarihlerinizi girebilirsiniz.</span>
+          </div>
+          <button onclick="dismissSampleNotice()" class="text-amber-700 dark:text-amber-300 font-bold text-xs px-1.5 py-0.5 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/50">✕</button>
+        </div>
+      ` : '';
+
+      return `
+        ${sampleNotice}
+        <div class="p-3.5 flex flex-col gap-3.5">
+          ${renderSplitProfileCard(p1, s1, THEMES.p1)}
+          ${renderSplitProfileCard(p2, s2, THEMES.p2)}
+        </div>
+      `;
+    }
+
+    function renderSplitProfileCard(profile, stats, theme) {
+      const totalDays = Math.max(stats.avgCycleLength, stats.currentCycleDay || 1, 28);
+      const displayDays = Math.min(totalDays, 35);
+
+      let timelineHtml = '';
+      for (let d = 1; d <= displayDays; d++) {
+        const isCurrent = d === stats.currentCycleDay;
+        const isPeriodDay = d <= stats.avgPeriodLength;
+        const isOvul = !profile.sadeMod && d === stats.ovulationCycleDay;
+        const isFertile = !profile.sadeMod && (d >= stats.ovulationCycleDay - 5 && d <= stats.ovulationCycleDay + 1);
+
+        let segClass = 'bg-slate-200/80 dark:bg-slate-700/80';
+        if (isPeriodDay) {
+          segClass = theme.barSolid;
+        } else if (isOvul) {
+          segClass = 'bg-emerald-500';
+        } else if (isFertile) {
+          segClass = 'bg-emerald-300/85 dark:bg-emerald-500/45';
+        }
+
+        const showLabel = d === 1 || d === 5 || d === 10 || d === 15 || d === 20 || d === 25 || d === displayDays || isCurrent;
+
+        timelineHtml += `
+          <div class="flex-1 flex flex-col items-center relative">
+            <div class="w-full h-2.5 ${d === 1 ? 'rounded-l-full' : ''} ${d === displayDays ? 'rounded-r-full' : ''} ${segClass} ${isCurrent ? 'ring-2 ring-slate-900 dark:ring-white ring-offset-1 dark:ring-offset-slate-800 z-10 scale-y-125 rounded-full' : ''}"></div>
+            <span class="text-[9px] mt-1 leading-none ${isCurrent ? 'font-extrabold text-slate-900 dark:text-white' : 'text-slate-400 dark:text-slate-500 font-medium'}">${showLabel ? d : ''}</span>
+          </div>
+        `;
+      }
+
+      const modeBadge = profile.sadeMod
+        ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-white/80 dark:bg-slate-700/80 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-600">Sade Mod</span>`
+        : `<span class="px-2 py-0.5 rounded-full text-[10px] font-semibold ${theme.badgeBg}">Tam Mod</span>`;
+
+      // Smart Preparation / Delay / Active Badge
+      let smartStatusBanner = '';
+      if (stats.statusKind === 'active') {
+        smartStatusBanner = `
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold ${theme.badgeBg} shadow-sm">
+            <span class="w-2 h-2 rounded-full ${theme.barSolid} animate-pulse"></span>
+            <span>Regl Aktif • ${stats.currentPeriodDay}. Gün</span>
+          </span>`;
+      } else if (stats.statusKind === 'approaching') {
+        smartStatusBanner = `
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900 dark:bg-amber-900/50 dark:text-amber-200 border border-amber-200/80 dark:border-amber-700/60">
+            <span>🔔 Yaklaşıyor</span>
+          </span>`;
+      } else if (stats.statusKind === 'today') {
+        smartStatusBanner = `
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900 dark:bg-amber-900/50 dark:text-amber-200 border border-amber-300 dark:border-amber-700">
+            <span>📅 Bugün Bekleniyor</span>
+          </span>`;
+      } else if (stats.statusKind === 'late') {
+        smartStatusBanner = `
+          <div class="mt-2 mx-auto max-w-[260px] px-3 py-1.5 rounded-xl bg-rose-100/90 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800/70 text-[11px] font-bold text-rose-800 dark:text-rose-200">
+            ⏳ Tahmini tarihten ${Math.abs(stats.daysUntilNext)} gün gecikti
+          </div>`;
+      }
+
+      // Fertile / Ovulation / PMS badge for Tam Mod
+      let phasePill = '';
+      if (!profile.sadeMod && !stats.isOnPeriod && stats.currentCycleDay > 0) {
+        const diffToOvul = stats.ovulationCycleDay - stats.currentCycleDay;
+        if (diffToOvul === 0) {
+          phasePill = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-200 text-[10px] font-semibold">🌸 Ovülasyon Günü</span>`;
+        } else if (diffToOvul >= -1 && diffToOvul <= 5) {
+          phasePill = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-[10px] font-semibold">🟢 Doğurganlık Dönemi</span>`;
+        } else if (stats.daysUntilNext !== null && stats.daysUntilNext > 0 && stats.daysUntilNext <= 5) {
+          phasePill = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800/60 text-[10px] font-semibold">🌙 PMS Dönemi</span>`;
+        }
+      }
+
+      const primaryBtn = stats.isOnPeriod
+        ? `<button onclick="quickTogglePeriod('${profile.id}')" class="flex-1 py-2.5 px-4 rounded-2xl font-semibold text-xs ${theme.btnPrimary} shadow-md active:scale-[0.98] transition flex items-center justify-center gap-1.5">
+             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+             <span>Regl Bitti</span>
+           </button>`
+        : `<button onclick="quickTogglePeriod('${profile.id}')" class="flex-1 py-2.5 px-4 rounded-2xl font-semibold text-xs ${theme.btnPrimary} shadow-md active:scale-[0.98] transition flex items-center justify-center gap-1.5">
+             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+             <span>Regl Başladı</span>
+           </button>`;
+
+      return `
+        <section class="rounded-3xl border ${theme.border} ${theme.cardBg} p-4 shadow-sm flex flex-col justify-between transition-colors">
+          <!-- Card Top Row -->
+          <div class="flex items-center justify-between gap-2 mb-2.5">
+            <button onclick="openProfileDetail('${profile.id}', 'analytics')" class="flex items-center gap-2.5 text-left group min-w-0">
+              <div class="w-9 h-9 rounded-2xl ${theme.badgeBg} flex items-center justify-center font-bold text-sm shrink-0">
+                ${escapeHtml(profile.name.charAt(0).toUpperCase())}
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <h2 class="text-base font-bold text-slate-900 dark:text-white group-hover:underline">${escapeHtml(profile.name)}</h2>
+                  ${modeBadge}
+                </div>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate">
+                  ${stats.currentCycleDay ? `Döngünün ${stats.currentCycleDay}. günü • Ort. ${stats.avgCycleLength} gün` : `Ort. ${stats.avgCycleLength} gün döngü`}
+                </p>
+              </div>
+            </button>
+
+            <button onclick="openProfileDetail('${profile.id}', 'analytics')" class="px-2.5 py-1.5 rounded-xl bg-white/85 dark:bg-slate-800/90 hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200/70 dark:border-slate-700 text-[11px] font-bold flex items-center gap-1 active:scale-95 transition shrink-0">
+              <span>Detay</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+            </button>
+          </div>
+
+          <!-- Center Countdown & Smart Badge -->
+          <div class="text-center py-2 px-2">
+            ${stats.statusKind !== 'late' && smartStatusBanner ? `<div class="mb-1.5">${smartStatusBanner}</div>` : ''}
+            <div class="text-3xl font-extrabold tracking-tight ${theme.accentText} leading-tight">
+              ${stats.statusLabel}
+            </div>
+            <div class="mt-1 flex items-center justify-center flex-wrap gap-2">
+              <span class="text-xs font-medium text-slate-600 dark:text-slate-300">${stats.statusSubLabel}</span>
+              ${phasePill}
+            </div>
+            ${stats.statusKind === 'late' ? smartStatusBanner : ''}
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex items-center gap-2 mt-2.5 mb-3.5">
+            ${primaryBtn}
+            <button onclick="openProfileDetail('${profile.id}', 'diary')" class="py-2.5 px-3.5 rounded-2xl font-semibold text-xs ${theme.btnSoft} active:scale-[0.98] transition flex items-center gap-1">
+              <span>+ Günlük / İlaç</span>
+            </button>
+          </div>
+
+          <!-- Horizontal Cycle Timeline Bar -->
+          <div class="bg-white/80 dark:bg-slate-900/60 rounded-2xl p-2.5 border border-white dark:border-slate-700/60">
+            <div class="flex items-center justify-between text-[10px] text-slate-400 dark:text-slate-400 font-medium mb-1.5 px-0.5">
+              <span>Döngü Çubuğu (1–${displayDays}. Gün)</span>
+              <span class="${theme.accentText} font-semibold">${stats.currentCycleDay ? stats.currentCycleDay + '. Gün' : '-'}</span>
+            </div>
+            <div class="flex items-start gap-[2px]">
+              ${timelineHtml}
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function quickTogglePeriod(profileId) {
+      const profile = appData.profiles[profileId];
+      const stats = computeProfileStats(profile);
+      const today = getTodayStr();
+
+      if (stats.ongoingPeriod) {
+        stats.ongoingPeriod.endDate = today;
+        saveData();
+        showToast(`${profile.name} için regl bitişi kaydedildi`);
+        renderApp();
+      } else if (stats.isOnPeriod && stats.lastValidPeriod) {
+        openAddPeriodModal(profileId, stats.lastValidPeriod.id);
+      } else {
+        profile.periods.push({
+          id: generateId(),
+          startDate: today,
+          endDate: null,
+          ignored: false
+        });
+        saveData();
+        showToast(`${profile.name} için regl başlangıcı kaydedildi`);
+        renderApp();
+      }
+    }
+
+    function dismissSampleNotice() {
+      appData.isSampleData = false;
+      saveData();
+      renderApp();
+    }
+
+    /* ============================================================================
+       6. VIEW 2: TAKVİM (ORTAK AİLE TAKVİMİ + KİŞİSEL GÖRÜNÜM)
+       ============================================================================ */
+    function renderCalendarView() {
+      const p1 = appData.profiles.p1;
+      const p2 = appData.profiles.p2;
+      const s1 = computeProfileStats(p1);
+      const s2 = computeProfileStats(p2);
+
+      const year = uiState.calendarYear;
+      const month = uiState.calendarMonth;
+      const today = getTodayStr();
+
+      const firstDayOfMonth = new Date(year, month, 1);
+      const startOffset = (firstDayOfMonth.getDay() + 6) % 7;
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      let cellsHtml = '';
+      for (let i = 0; i < startOffset; i++) {
+        cellsHtml += `<div class="h-14 rounded-xl"></div>`;
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const ds = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const isToday = ds === today;
+
+        if (uiState.calendarMode === 'shared') {
+          const p1Log = s1.loggedDaysMap[ds];
+          const p1Proj = s1.projectedDaysMap[ds];
+          const p2Log = s2.loggedDaysMap[ds];
+          const p2Proj = s2.projectedDaysMap[ds];
+          const p1Note = hasDiaryData(p1.diary[ds]);
+          const p2Note = hasDiaryData(p2.diary[ds]);
+
+          const p1Bar = p1Log
+            ? `<div class="w-full h-1.5 rounded-full ${p1Log.ignored ? 'bg-slate-300 dark:bg-slate-600' : 'bg-rose-500'}"></div>`
+            : (p1Proj ? `<div class="w-full h-1.5 rounded-full border border-dashed border-rose-400 bg-rose-100/70 dark:bg-rose-900/40"></div>` : `<div class="h-1.5"></div>`);
+
+          const p2Bar = p2Log
+            ? `<div class="w-full h-1.5 rounded-full ${p2Log.ignored ? 'bg-slate-300 dark:bg-slate-600' : 'bg-violet-500'}"></div>`
+            : (p2Proj ? `<div class="w-full h-1.5 rounded-full border border-dashed border-violet-400 bg-violet-100/70 dark:bg-violet-900/40"></div>` : `<div class="h-1.5"></div>`);
+
+          cellsHtml += `
+            <button onclick="openDaySheet('${ds}')" class="h-14 rounded-2xl p-1 flex flex-col items-center justify-between border transition active:scale-95 ${
+              isToday
+                ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-slate-900 dark:border-white shadow-sm'
+                : 'bg-white dark:bg-slate-800/80 border-slate-100 dark:border-slate-700/70 hover:border-slate-300 dark:hover:border-slate-500 text-slate-800 dark:text-slate-100'
+            }">
+              <div class="w-full flex items-center justify-between px-0.5">
+                <span class="text-xs font-bold">${day}</span>
+                <span class="flex items-center gap-0.5">
+                  ${p1Note ? `<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>` : ''}
+                  ${p2Note ? `<span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>` : ''}
+                </span>
+              </div>
+              <div class="w-full flex flex-col gap-1 px-0.5 pb-0.5">
+                ${p1Bar}
+                ${p2Bar}
+              </div>
+            </button>
+          `;
+        } else {
+          const activePid = uiState.calendarMode;
+          const profile = appData.profiles[activePid];
+          const stats = activePid === 'p1' ? s1 : s2;
+
+          const logInfo = stats.loggedDaysMap[ds];
+          const projInfo = stats.projectedDaysMap[ds];
+          const fertileInfo = !profile.sadeMod ? stats.fertileDaysMap[ds] : null;
+          const hasDiary = hasDiaryData(profile.diary[ds]);
+
+          let cellBg = isToday
+            ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-slate-900 dark:border-white shadow-sm'
+            : 'bg-white dark:bg-slate-800/80 border-slate-100 dark:border-slate-700/70 hover:border-slate-300 text-slate-800 dark:text-slate-100';
+          let topBadge = '';
+
+          if (logInfo) {
+            if (logInfo.ignored) {
+              cellBg = isToday
+                ? 'bg-slate-700 text-white border-slate-700'
+                : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 border-slate-200 dark:border-slate-600';
+            } else {
+              cellBg = activePid === 'p1'
+                ? (isToday ? 'bg-rose-700 text-white border-rose-700' : 'bg-rose-100/90 dark:bg-rose-900/50 text-rose-900 dark:text-rose-100 border-rose-200 dark:border-rose-800')
+                : (isToday ? 'bg-violet-700 text-white border-violet-700' : 'bg-violet-100/90 dark:bg-violet-900/50 text-violet-900 dark:text-violet-100 border-violet-200 dark:border-violet-800');
+            }
+            topBadge = `<span class="text-[9px] font-extrabold opacity-80">${logInfo.dayNum}</span>`;
+          } else if (projInfo) {
+            cellBg = activePid === 'p1'
+              ? 'bg-striped-rose text-rose-800 dark:text-rose-200 border-dashed border-rose-300 dark:border-rose-700'
+              : 'bg-striped-violet text-violet-800 dark:text-violet-200 border-dashed border-violet-300 dark:border-violet-700';
+          }
+
+          let bottomMarker = '';
+          if (fertileInfo === 'ovulation') {
+            bottomMarker = `<span class="text-[11px] leading-none" title="Ovülasyon">🌸</span>`;
+          } else if (fertileInfo === 'fertile') {
+            bottomMarker = `<span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>`;
+          } else if (hasDiary) {
+            bottomMarker = `<span class="w-1.5 h-1.5 rounded-full ${isToday ? 'bg-amber-400' : 'bg-amber-500'} inline-block"></span>`;
+          }
+
+          cellsHtml += `
+            <button onclick="openDaySheet('${ds}')" class="h-14 rounded-2xl p-1 flex flex-col items-center justify-between border transition active:scale-95 ${cellBg}">
+              <div class="w-full flex items-center justify-between px-0.5 h-3">
+                ${topBadge || '<span></span>'}
+                ${hasDiary && fertileInfo ? `<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>` : ''}
+              </div>
+              <span class="text-xs font-bold leading-none">${day}</span>
+              <div class="h-3 flex items-center justify-center">
+                ${bottomMarker}
+              </div>
+            </button>
+          `;
+        }
+      }
+
+      let legendHtml = '';
+      if (uiState.calendarMode === 'shared') {
+        legendHtml = `
+          <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] font-medium text-slate-600 dark:text-slate-300">
+            <span class="flex items-center gap-1.5"><span class="w-3.5 h-1.5 rounded-full bg-rose-500"></span> ${escapeHtml(p1.name)}</span>
+            <span class="flex items-center gap-1.5"><span class="w-3.5 h-1.5 rounded-full bg-violet-500"></span> ${escapeHtml(p2.name)}</span>
+            <span class="flex items-center gap-1.5"><span class="w-3.5 h-1.5 rounded-full border border-dashed border-slate-400"></span> Tahmini</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span>/<span class="w-2 h-2 rounded-full bg-sky-400"></span> Günlük/İlaç</span>
+          </div>
+        `;
+      } else {
+        const activeProfile = appData.profiles[uiState.calendarMode];
+        const barColor = uiState.calendarMode === 'p1' ? 'bg-rose-400' : 'bg-violet-400';
+        const dashColor = uiState.calendarMode === 'p1' ? 'bg-striped-rose border-rose-300' : 'bg-striped-violet border-violet-300';
+        legendHtml = `
+          <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] font-medium text-slate-600 dark:text-slate-300">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-md ${barColor}"></span> Regl</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-md border border-dashed ${dashColor}"></span> Tahmini</span>
+            ${!activeProfile.sadeMod ? `
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Doğurganlık</span>
+              <span class="flex items-center gap-1">🌸 Ovülasyon</span>
+            ` : `<span class="text-slate-400">(Sade Mod)</span>`}
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Günlük</span>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="p-3.5 space-y-3.5">
+          <!-- Segmented Switch -->
+          <div class="bg-slate-200/70 dark:bg-slate-800 p-1 rounded-2xl grid grid-cols-3 gap-1">
+            <button onclick="setCalendarMode('shared')" class="py-2 rounded-xl text-xs font-bold transition ${uiState.calendarMode === 'shared' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400'}">
+              Ortak Takvim
+            </button>
+            <button onclick="setCalendarMode('p1')" class="py-2 rounded-xl text-xs font-bold transition ${uiState.calendarMode === 'p1' ? 'bg-rose-600 text-white shadow-sm' : 'text-slate-500 dark:text-slate-400'}">
+              ${escapeHtml(p1.name)}
+            </button>
+            <button onclick="setCalendarMode('p2')" class="py-2 rounded-xl text-xs font-bold transition ${uiState.calendarMode === 'p2' ? 'bg-violet-600 text-white shadow-sm' : 'text-slate-500 dark:text-slate-400'}">
+              ${escapeHtml(p2.name)}
+            </button>
+          </div>
+
+          <!-- Calendar Card -->
+          <div class="bg-white dark:bg-slate-800/70 rounded-3xl border border-slate-200/80 dark:border-slate-700/80 p-3.5 shadow-sm">
+            <div class="flex items-center justify-between mb-3.5 px-1">
+              <button onclick="changeCalendarMonth(-1)" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 active:scale-95 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+              </button>
+              <div class="flex items-center gap-2">
+                <h2 class="text-sm font-extrabold text-slate-900 dark:text-white uppercase tracking-wide">
+                  ${TR_MONTHS[month]} ${year}
+                </h2>
+                <button onclick="jumpCalendarToday()" class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-700 text-[10px] font-bold text-slate-600 dark:text-slate-200 hover:bg-slate-200">Bugün</button>
+              </div>
+              <button onclick="changeCalendarMonth(1)" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 active:scale-95 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+              </button>
+            </div>
+
+            <div class="grid grid-cols-7 gap-1 mb-1.5 text-center">
+              ${TR_DAYS_SHORT.map(d => `<div class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase">${d}</div>`).join('')}
+            </div>
+
+            <div class="grid grid-cols-7 gap-1">
+              ${cellsHtml}
+            </div>
+          </div>
+
+          <!-- Legend Card -->
+          <div class="bg-white dark:bg-slate-800/70 rounded-2xl border border-slate-200/70 dark:border-slate-700/80 p-3">
+            ${legendHtml}
+            <p class="text-[10px] text-center text-slate-400 dark:text-slate-500 mt-2">Detay görmek, ilaç/belirti eklemek veya regl başlatmak için güne dokunun.</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function setCalendarMode(mode) { uiState.calendarMode = mode; renderApp(); }
+    function changeCalendarMonth(delta) {
+      let m = uiState.calendarMonth + delta;
+      let y = uiState.calendarYear;
+      if (m < 0) { m = 11; y--; }
+      if (m > 11) { m = 0; y++; }
+      uiState.calendarYear = y;
+      uiState.calendarMonth = m;
+      renderApp();
+    }
+    function jumpCalendarToday() {
+      const now = new Date();
+      uiState.calendarYear = now.getFullYear();
+      uiState.calendarMonth = now.getMonth();
+      renderApp();
+    }
+
+    /* ============================================================================
+       7. VIEW 3: ANALİZ, GRAFİKLER, .ICS TAKVİM AKTARMA & DOKTOR RAPORU
+       ============================================================================ */
+    function renderAnalyticsView() {
+      const pid = uiState.analyticsProfile;
+      const profile = appData.profiles[pid];
+      const stats = computeProfileStats(profile);
+      const theme = THEMES[pid];
+
+      const chartSvg = renderBarChartSvg(stats, theme, uiState.analyticsChartType);
+
+      let listHtml = '';
+      if (uiState.analyticsLogTab === 'past') {
+        const reversed = [...stats.enrichedPeriods].reverse();
+        if (reversed.length === 0) {
+          listHtml = `<p class="text-center text-xs text-slate-400 py-6">Henüz geçmiş regl kaydı bulunmuyor.</p>`;
+        } else {
+          listHtml = reversed.map(p => {
+            const cycleText = p.cycleLen ? `${p.cycleLen} Günlük Döngü` : 'İlk Kayıt';
+            const endText = p.endDate ? `${p.duration} gün sürdü` : 'Devam ediyor';
+            return `
+              <div class="flex items-center justify-between py-3 border-b border-slate-100 dark:border-slate-700/70 last:border-0 gap-2">
+                <div class="min-w-0">
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    <span class="text-xs font-bold text-slate-900 dark:text-white">${formatDateShort(p.startDate)}</span>
+                    ${p.ignored ? `<span class="px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[10px] font-semibold">Yoksayıldı</span>` : ''}
+                    ${!p.endDate ? `<span class="px-1.5 py-0.5 rounded-md ${theme.badgeBg} text-[10px] font-semibold">Aktif</span>` : ''}
+                  </div>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">${endText} • ${cycleText}</p>
+                </div>
+                <div class="flex items-center gap-1 shrink-0">
+                  <button onclick="toggleIgnorePeriod('${pid}', '${p.id}')" class="px-2 py-1 rounded-lg text-[10px] font-semibold border transition ${
+                    p.ignored
+                      ? 'bg-slate-800 dark:bg-white text-white dark:text-slate-900 border-slate-800 dark:border-white'
+                      : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600 hover:bg-slate-50'
+                  }">
+                    ${p.ignored ? 'Dahil Et' : 'Yoksay'}
+                  </button>
+                  <button onclick="openAddPeriodModal('${pid}', '${p.id}')" class="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200 hover:bg-slate-200" title="Düzenle">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z"/></svg>
+                  </button>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      } else {
+        if (stats.projectedPeriods.length === 0) {
+          listHtml = `<p class="text-center text-xs text-slate-400 py-6">Tahmin oluşturmak için en az 1 regl kaydı ekleyin.</p>`;
+        } else {
+          listHtml = stats.projectedPeriods.map((pp, idx) => `
+            <div class="flex items-center justify-between py-3 border-b border-slate-100 dark:border-slate-700/70 last:border-0">
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-xs font-bold text-slate-900 dark:text-white">${formatDateShort(pp.startDate)}</span>
+                  <span class="px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[10px] font-semibold">${idx === 0 ? 'Sıradaki' : `${idx + 1}. Tahmin`}</span>
+                </div>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Tahmini Bitiş: ${formatDateShort(pp.endDate)}</p>
+              </div>
+              <span class="text-xs font-semibold ${theme.accentText}">${pp.cycleLen} Gün</span>
+            </div>
+          `).join('');
+        }
+      }
+
+      return `
+        <div class="p-3.5 space-y-3.5">
+          <!-- Profile Switcher -->
+          <div class="bg-slate-200/70 dark:bg-slate-800 p-1 rounded-2xl grid grid-cols-2 gap-1">
+            <button onclick="setAnalyticsProfile('p1')" class="py-2 rounded-xl text-xs font-bold transition ${pid === 'p1' ? THEMES.p1.pillActive : 'text-slate-600 dark:text-slate-400'}">
+              ${escapeHtml(appData.profiles.p1.name)}
+            </button>
+            <button onclick="setAnalyticsProfile('p2')" class="py-2 rounded-xl text-xs font-bold transition ${pid === 'p2' ? THEMES.p2.pillActive : 'text-slate-600 dark:text-slate-400'}">
+              ${escapeHtml(appData.profiles.p2.name)}
+            </button>
+          </div>
+
+          <!-- 4 Summary Cards -->
+          <div class="grid grid-cols-2 gap-2.5">
+            <div class="bg-white dark:bg-slate-800/70 rounded-2xl p-3.5 border border-slate-200/70 dark:border-slate-700/80 shadow-sm">
+              <p class="text-[10px] font-bold text-slate-400 uppercase">Son Regl Tarihi</p>
+              <p class="text-sm font-extrabold text-slate-900 dark:text-white mt-1">${stats.lastValidPeriod ? formatDateShort(stats.lastValidPeriod.startDate) : '-'}</p>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">${stats.lastValidPeriod ? `${Math.max(0, diffDays(stats.lastValidPeriod.startDate, getTodayStr()))} gün önce` : 'Kayıt yok'}</p>
+            </div>
+            <div class="bg-white dark:bg-slate-800/70 rounded-2xl p-3.5 border border-slate-200/70 dark:border-slate-700/80 shadow-sm">
+              <p class="text-[10px] font-bold text-slate-400 uppercase">Tahmini Sonraki</p>
+              <p class="text-sm font-extrabold ${theme.accentText} mt-1">${stats.nextProjectedStart ? formatDateShort(stats.nextProjectedStart) : '-'}</p>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">${stats.statusLabel}</p>
+            </div>
+            <div class="bg-white dark:bg-slate-800/70 rounded-2xl p-3.5 border border-slate-200/70 dark:border-slate-700/80 shadow-sm">
+              <p class="text-[10px] font-bold text-slate-400 uppercase">Ortalama Döngü</p>
+              <p class="text-xl font-extrabold text-slate-900 dark:text-white mt-0.5">${stats.avgCycleLength} <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">Gün</span></p>
+            </div>
+            <div class="bg-white dark:bg-slate-800/70 rounded-2xl p-3.5 border border-slate-200/70 dark:border-slate-700/80 shadow-sm">
+              <p class="text-[10px] font-bold text-slate-400 uppercase">Ortalama Regl</p>
+              <p class="text-xl font-extrabold text-slate-900 dark:text-white mt-0.5">${stats.avgPeriodLength} <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">Gün</span></p>
+            </div>
+          </div>
+
+          <!-- Action Tools: Calendar Export (.ics) & Doctor Report (PDF/Print) -->
+          <div class="grid grid-cols-2 gap-2.5">
+            <button onclick="openIcsExportModal('${pid}')" class="p-3 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 shadow-sm flex items-center gap-2.5 text-left active:scale-[0.98] transition hover:border-slate-300 dark:hover:border-slate-600">
+              <div class="w-9 h-9 rounded-xl bg-sky-100 dark:bg-sky-900/50 text-sky-700 dark:text-sky-300 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-3.75h.008v.008H12v-.008z"/></svg>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs font-bold text-slate-900 dark:text-white leading-tight">Takvime Aktar</p>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400 truncate">.ics (2 gün önce alarm)</p>
+              </div>
+            </button>
+
+            <button onclick="openDoctorReportModal('${pid}')" class="p-3 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 shadow-sm flex items-center gap-2.5 text-left active:scale-[0.98] transition hover:border-slate-300 dark:hover:border-slate-600">
+              <div class="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs font-bold text-slate-900 dark:text-white leading-tight">Doktor Raporu</p>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400 truncate">PDF / A4 Yazdır</p>
+              </div>
+            </button>
+          </div>
+
+          <!-- Chart Card -->
+          <div class="bg-white dark:bg-slate-800/70 rounded-3xl p-4 border border-slate-200/80 dark:border-slate-700/80 shadow-sm">
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <div class="bg-slate-100 dark:bg-slate-900/70 p-0.5 rounded-xl flex text-[11px] font-bold">
+                <button onclick="setAnalyticsChartType('cycle')" class="px-3 py-1.5 rounded-lg transition ${uiState.analyticsChartType === 'cycle' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400'}">
+                  Döngü Uzunluğu
+                </button>
+                <button onclick="setAnalyticsChartType('period')" class="px-3 py-1.5 rounded-lg transition ${uiState.analyticsChartType === 'period' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400'}">
+                  Regl Süresi
+                </button>
+              </div>
+              <span class="text-[10px] font-semibold text-slate-400">Son Kayıtlar</span>
+            </div>
+            ${chartSvg}
+          </div>
+
+          <!-- Past & Projected Log -->
+          <div class="bg-white dark:bg-slate-800/70 rounded-3xl p-4 border border-slate-200/80 dark:border-slate-700/80 shadow-sm">
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <div class="bg-slate-100 dark:bg-slate-900/70 p-0.5 rounded-xl flex text-[11px] font-bold">
+                <button onclick="setAnalyticsLogTab('past')" class="px-3 py-1.5 rounded-lg transition ${uiState.analyticsLogTab === 'past' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400'}">
+                  Geçmiş Döngüler
+                </button>
+                <button onclick="setAnalyticsLogTab('projected')" class="px-3 py-1.5 rounded-lg transition ${uiState.analyticsLogTab === 'projected' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400'}">
+                  Gelecek 6 Ay
+                </button>
+              </div>
+              <button onclick="openAddPeriodModal('${pid}')" class="text-xs font-bold ${theme.accentText} hover:underline">+ Ekle</button>
+            </div>
+            <div>
+              ${listHtml}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderBarChartSvg(stats, theme, type) {
+      const isDark = Boolean(appData.appearance.darkMode);
+      const barHex = isDark ? theme.hexDark : theme.hex;
+      const barSoft = isDark ? theme.hexSoftDark : theme.hexSoft;
+      const gridColor = isDark ? '#334155' : '#f1f5f9';
+      const labelColor = isDark ? '#94a3b8' : '#64748b';
+      const valColor = isDark ? '#e2e8f0' : '#334155';
+
+      let items = [];
+      if (type === 'cycle') {
+        items = stats.enrichedPeriods
+          .filter(p => p.cycleLen !== null)
+          .slice(-6)
+          .map(p => ({ label: formatDateDayMonth(p.startDate), value: p.cycleLen, ignored: p.ignored, expected: false }));
+        if (stats.nextProjectedStart) {
+          items.push({ label: formatDateDayMonth(stats.nextProjectedStart), value: stats.avgCycleLength, ignored: false, expected: true });
+        }
+      } else {
+        items = stats.enrichedPeriods
+          .slice(-6)
+          .map(p => ({ label: formatDateDayMonth(p.startDate), value: p.duration, ignored: p.ignored, expected: false }));
+        if (stats.nextProjectedStart) {
+          items.push({ label: formatDateDayMonth(stats.nextProjectedStart), value: stats.avgPeriodLength, ignored: false, expected: true });
+        }
+      }
+
+      if (items.length === 0) {
+        return `<div class="h-40 flex items-center justify-center text-xs text-slate-400">Grafik için yeterli kayıt bulunmuyor.</div>`;
+      }
+
+      const maxVal = Math.max(...items.map(i => i.value), type === 'cycle' ? 35 : 8);
+      const yMax = Math.ceil(maxVal / 5) * 5;
+      const svgW = 360, svgH = 165, padL = 28, padR = 10, padT = 22, padB = 28;
+      const plotW = svgW - padL - padR;
+      const plotH = svgH - padT - padB;
+
+      let gridHtml = '';
+      for (let s = 0; s <= 4; s++) {
+        const val = Math.round((yMax / 4) * s);
+        const y = padT + plotH - (plotH * (val / yMax));
+        gridHtml += `
+          <line x1="${padL}" y1="${y}" x2="${svgW - padR}" y2="${y}" stroke="${gridColor}" stroke-width="1" />
+          <text x="${padL - 5}" y="${y + 3}" text-anchor="end" font-size="9" fill="#94a3b8" font-weight="600">${val}</text>
+        `;
+      }
+
+      const avgVal = type === 'cycle' ? stats.avgCycleLength : stats.avgPeriodLength;
+      const avgY = padT + plotH - (plotH * Math.min(avgVal, yMax) / yMax);
+      const slotW = plotW / items.length;
+      const barW = Math.min(28, slotW * 0.55);
+
+      const barsHtml = items.map((item, i) => {
+        const cx = padL + slotW * i + slotW / 2;
+        const barH = Math.max(4, (item.value / yMax) * plotH);
+        const y = padT + plotH - barH;
+
+        let fill = barHex, stroke = 'none', dash = '';
+        if (item.ignored) {
+          fill = isDark ? '#475569' : '#cbd5e1';
+        } else if (item.expected) {
+          fill = barSoft;
+          stroke = barHex;
+          dash = 'stroke-dasharray="3 2" stroke-width="1.5"';
+        }
+
+        return `
+          <g>
+            <rect x="${cx - barW / 2}" y="${y}" width="${barW}" height="${barH}" rx="6" fill="${fill}" stroke="${stroke}" ${dash} />
+            <text x="${cx}" y="${y - 5}" text-anchor="middle" font-size="10" font-weight="700" fill="${item.ignored ? '#94a3b8' : valColor}">${item.value}</text>
+            <text x="${cx}" y="${svgH - 8}" text-anchor="middle" font-size="9" font-weight="600" fill="${item.expected ? barHex : labelColor}">${item.label}</text>
+          </g>
+        `;
+      }).join('');
+
+      return `
+        <svg viewBox="0 0 ${svgW} ${svgH}" class="w-full h-auto overflow-visible">
+          ${gridHtml}
+          <line x1="${padL}" y1="${avgY}" x2="${svgW - padR}" y2="${avgY}" stroke="${theme.hexLight}" stroke-width="1.2" stroke-dasharray="4 3" />
+          ${barsHtml}
+        </svg>
+        <div class="flex items-center justify-center gap-4 mt-1 text-[10px] font-medium text-slate-500 dark:text-slate-400">
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm" style="background:${barHex}"></span> Kayıtlı</span>
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-slate-300 dark:bg-slate-600"></span> Yoksayılan</span>
+          <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm border border-dashed" style="border-color:${barHex};background:${barSoft}"></span> Tahmini</span>
+        </div>
+      `;
+    }
+
+    function setAnalyticsProfile(pid) { uiState.analyticsProfile = pid; renderApp(); }
+    function setAnalyticsChartType(t) { uiState.analyticsChartType = t; renderApp(); }
+    function setAnalyticsLogTab(t) { uiState.analyticsLogTab = t; renderApp(); }
+
+    function toggleIgnorePeriod(pid, periodId) {
+      const p = appData.profiles[pid].periods.find(x => x.id === periodId);
+      if (p) {
+        p.ignored = !p.ignored;
+        saveData();
+        showToast(p.ignored ? 'Kayıt ortalamadan hariç tutuldu' : 'Kayıt ortalamaya dahil edildi');
+        renderApp();
+      }
+    }
+
+    /* ---------- iCalendar (.ics) Export with 2-Day Advance VALARM ---------- */
+    function openIcsExportModal(defaultPid) {
+      const p1Name = escapeHtml(appData.profiles.p1.name);
+      const p2Name = escapeHtml(appData.profiles.p2.name);
+      openModal(`
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h3 class="text-base font-extrabold text-slate-900 dark:text-white">Takvime Aktar (.ics)</h3>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400">Gelecek 6 tahmini tarih • 2 gün önce sessiz hatırlatma</p>
+          </div>
+          <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 flex items-center justify-center font-bold">✕</button>
+        </div>
+        <p class="text-xs text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">
+          İndireceğiniz <strong>.ics</strong> dosyasını iPhone veya Android telefonunuzda açarak tahmini başlangıç tarihlerini ve 2 gün öncesinden uyarı alarmlarını doğrudan telefon takviminize ekleyebilirsiniz.
+        </p>
+        <div class="space-y-2.5">
+          <button onclick="downloadIcsFile(['${defaultPid}'])" class="w-full py-3 px-4 rounded-2xl ${THEMES[defaultPid].btnPrimary} text-xs font-bold active:scale-[0.98] transition">
+            Sadece ${escapeHtml(appData.profiles[defaultPid].name)} İçin İndir (.ics)
+          </button>
+          <button onclick="downloadIcsFile(['p1','p2'])" class="w-full py-3 px-4 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold active:scale-[0.98] transition">
+            Her İkisi (${p1Name} & ${p2Name}) İçin İndir (.ics)
+          </button>
+        </div>
+      `);
+    }
+
+    function downloadIcsFile(profileIds) {
+      const nowStamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+      const lines = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//YaseminElif//AileDonguTakip//TR',
+        'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH'
+      ];
+
+      let eventCount = 0;
+      profileIds.forEach(pid => {
+        const profile = appData.profiles[pid];
+        const stats = computeProfileStats(profile);
+        stats.projectedPeriods.forEach((pp, idx) => {
+          const dtStart = pp.startDate.replace(/-/g, '');
+          const dtEnd = addDays(pp.startDate, 1).replace(/-/g, '');
+          const uid = `${pid}-${dtStart}-${idx}@aile-dongu-takip.local`;
+          lines.push(
+            'BEGIN:VEVENT',
+            `UID:${uid}`,
+            `DTSTAMP:${nowStamp}`,
+            `DTSTART;VALUE=DATE:${dtStart}`,
+            `DTEND;VALUE=DATE:${dtEnd}`,
+            `SUMMARY:${profile.name} — Tahmini Regl Başlangıcı`,
+            `DESCRIPTION:Ortalama ${stats.avgCycleLength} günlük döngüye göre tahmini başlangıç tarihi (Tahmini süre: ${stats.avgPeriodLength} gün).`,
+            'BEGIN:VALARM',
+            'TRIGGER:-P2D',
+            'ACTION:DISPLAY',
+            `DESCRIPTION:${profile.name} için tahmini başlangıca 2 gün kaldı.`,
+            'END:VALARM',
+            'END:VEVENT'
+          );
+          eventCount++;
+        });
+      });
+
+      lines.push('END:VCALENDAR');
+
+      if (eventCount === 0) {
+        showToast('Aktarılacak tahmini tarih bulunamadı', true);
+        return;
+      }
+
+      const icsContent = lines.join('\r\n');
+      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const label = profileIds.length === 2 ? 'yasemin_elif' : appData.profiles[profileIds[0]].name.toLowerCase();
+      a.href = url;
+      a.download = `dongu_hatirlatici_${label}_${getTodayStr()}.ics`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      closeModal();
+      showToast(`${eventCount} hatırlatıcı .ics olarak indirildi`);
+    }
+
+    /* ---------- Doctor Report (Preview Modal + Clean A4 Print) ---------- */
+    function buildDoctorReportHtml(pid) {
+      const profile = appData.profiles[pid];
+      const stats = computeProfileStats(profile);
+      const today = getTodayStr();
+      const cutoffDate = addDays(today, -365);
+
+      // Last 12 months periods
+      const recentPeriods = [...stats.enrichedPeriods]
+        .filter(p => p.startDate >= cutoffDate)
+        .reverse();
+
+      // Aggregate diary symptoms, moods, meds in last 12 months
+      const symptomCounts = {};
+      const moodCounts = {};
+      const medCounts = {};
+
+      Object.keys(profile.diary || {}).forEach(ds => {
+        if (ds < cutoffDate) return;
+        const e = profile.diary[ds];
+        if (!e) return;
+        (e.symptoms || []).forEach(id => {
+          const lbl = SYMPTOM_OPTIONS.find(x => x.id === id)?.label || id;
+          symptomCounts[lbl] = (symptomCounts[lbl] || 0) + 1;
+        });
+        (e.moods || []).forEach(id => {
+          const lbl = MOOD_OPTIONS.find(x => x.id === id)?.label || id;
+          moodCounts[lbl] = (moodCounts[lbl] || 0) + 1;
+        });
+        (e.meds || []).forEach(id => {
+          const lbl = MED_OPTIONS.find(x => x.id === id)?.label || id;
+          medCounts[lbl] = (medCounts[lbl] || 0) + 1;
+        });
+        (e.customMeds || []).forEach(txt => {
+          const clean = String(txt).trim();
+          if (clean) medCounts[clean] = (medCounts[clean] || 0) + 1;
+        });
+      });
+
+      const sortCounts = obj => Object.entries(obj).sort((a, b) => b[1] - a[1]);
+      const topSymptoms = sortCounts(symptomCounts);
+      const topMoods = sortCounts(moodCounts);
+      const topMeds = sortCounts(medCounts);
+
+      const periodRows = recentPeriods.length === 0
+        ? `<tr><td colspan="5" class="py-3 text-center text-slate-400">Son 12 ayda kayıtlı döngü yok.</td></tr>`
+        : recentPeriods.map(p => `
+            <tr class="border-b border-slate-200">
+              <td class="py-2 pr-2 font-semibold">${formatDateShort(p.startDate)}</td>
+              <td class="py-2 pr-2">${p.endDate ? formatDateShort(p.endDate) : 'Devam Ediyor'}</td>
+              <td class="py-2 pr-2">${p.duration} gün</td>
+              <td class="py-2 pr-2">${p.cycleLen ? p.cycleLen + ' gün' : '-'}</td>
+              <td class="py-2">${p.ignored ? '<span class="text-slate-500">Yoksayıldı (Düzensiz)</span>' : 'Normal'}</td>
+            </tr>
+          `).join('');
+
+      const badgeList = (entries, emptyText) => entries.length === 0
+        ? `<p class="text-xs text-slate-400">${emptyText}</p>`
+        : `<div class="flex flex-wrap gap-1.5">
+            ${entries.map(([k, v]) => `<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 text-xs font-medium border border-slate-200">${escapeHtml(k)} <strong>(${v}x)</strong></span>`).join('')}
+          </div>`;
+
+      return `
+        <div class="text-slate-900 space-y-5 font-sans">
+          <!-- Report Header -->
+          <div class="border-b-2 border-slate-900 pb-3 flex items-start justify-between gap-4">
+            <div>
+              <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Kişisel Sağlık & Döngü Özeti</p>
+              <h2 class="text-xl font-extrabold text-slate-900 mt-0.5">${escapeHtml(profile.name)} — Doktor Raporu</h2>
+            </div>
+            <div class="text-right text-xs text-slate-600">
+              <p class="font-bold text-slate-900">Rapor Tarihi</p>
+              <p>${formatDateShort(today)}</p>
+            </div>
+          </div>
+
+          <!-- Summary Metrics -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 print-avoid-break">
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <p class="text-[10px] font-bold uppercase text-slate-500">Ortalama Döngü</p>
+              <p class="text-lg font-extrabold text-slate-900 mt-0.5">${stats.avgCycleLength} Gün</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <p class="text-[10px] font-bold uppercase text-slate-500">En Kısa / Uzun</p>
+              <p class="text-lg font-extrabold text-slate-900 mt-0.5">${stats.minCycleLength}–${stats.maxCycleLength} Gün</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <p class="text-[10px] font-bold uppercase text-slate-500">Ortalama Regl</p>
+              <p class="text-lg font-extrabold text-slate-900 mt-0.5">${stats.avgPeriodLength} Gün</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <p class="text-[10px] font-bold uppercase text-slate-500">Yoksayılan Kayıt</p>
+              <p class="text-lg font-extrabold text-slate-900 mt-0.5">${stats.ignoredCount} Adet</p>
+            </div>
+          </div>
+
+          <!-- Past Cycles Table -->
+          <div class="print-avoid-break">
+            <h3 class="text-xs font-extrabold uppercase tracking-wide text-slate-700 mb-2">Son 12 Ay Döngü Geçmişi</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr class="border-b-2 border-slate-300 text-slate-500">
+                    <th class="py-1.5 pr-2">Başlangıç</th>
+                    <th class="py-1.5 pr-2">Bitiş</th>
+                    <th class="py-1.5 pr-2">Süre</th>
+                    <th class="py-1.5 pr-2">Döngü</th>
+                    <th class="py-1.5">Durum</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${periodRows}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Frequent Symptoms & Moods -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 print-avoid-break">
+            <div>
+              <h3 class="text-xs font-extrabold uppercase tracking-wide text-slate-700 mb-2">En Sık Kaydedilen Belirtiler</h3>
+              ${badgeList(topSymptoms, 'Kayıtlı belirti bulunmuyor.')}
+            </div>
+            <div>
+              <h3 class="text-xs font-extrabold uppercase tracking-wide text-slate-700 mb-2">Ruh Hali Özeti</h3>
+              ${badgeList(topMoods, 'Kayıtlı ruh hali bulunmuyor.')}
+            </div>
+          </div>
+
+          <!-- Medications Summary -->
+          <div class="print-avoid-break">
+            <h3 class="text-xs font-extrabold uppercase tracking-wide text-slate-700 mb-2">Kullanılan İlaç, Ağrı Kesici ve Takviyeler</h3>
+            ${badgeList(topMeds, 'Kayıtlı ilaç veya takviye bulunmuyor.')}
+          </div>
+
+          <p class="text-[10px] text-slate-400 border-t border-slate-200 pt-2">
+            Bu özet kişisel takip kayıtlarından oluşturulmuştur; tıbbi teşhis yerine geçmez.
+          </p>
+        </div>
+      `;
+    }
+
+    function openDoctorReportModal(pid) {
+      const reportHtml = buildDoctorReportHtml(pid);
+      document.getElementById('print-report-root').innerHTML = reportHtml;
+
+      openModal(`
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Doktor Raporu Önizleme</h3>
+          <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 flex items-center justify-center font-bold">✕</button>
+        </div>
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 max-h-[60vh] overflow-y-auto mb-4">
+          ${reportHtml}
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="window.print()" class="flex-1 py-3 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold flex items-center justify-center gap-2 shadow-md active:scale-[0.98] transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5zm-3 0h.008v.008H15V10.5z"/></svg>
+            <span>Yazdır / PDF Olarak Kaydet</span>
+          </button>
+        </div>
+      `);
+    }
+
+    /* ============================================================================
+       8. VIEW 4: GÜNLÜK (AKINTI, İLAÇ/AĞRI KESİCİ, BELİRTİ, RUH HALİ & NOT)
+       ============================================================================ */
+    function renderDiaryView() {
+      const pid = uiState.diaryProfile;
+      const profile = appData.profiles[pid];
+      const theme = THEMES[pid];
+      const dateStr = uiState.diaryDate;
+
+      const entry = profile.diary[dateStr] || { flow: 'yok', meds: [], customMeds: [], symptoms: [], moods: [], note: '' };
+
+      // Flow chips
+      const flowHtml = FLOW_OPTIONS.map(f => {
+        const active = (entry.flow || 'yok') === f.id;
+        return `
+          <button onclick="setDiaryFlow('${f.id}')" class="py-2 px-2 rounded-2xl text-xs font-semibold border transition active:scale-95 flex items-center justify-center gap-1 ${
+            active
+              ? `${theme.pillActive} border-transparent`
+              : 'bg-slate-50 dark:bg-slate-900/60 border-slate-200/80 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+          }">
+            <span>${f.icon}</span>
+            <span>${f.label}</span>
+          </button>
+        `;
+      }).join('');
+
+      // Medication preset chips
+      const medsHtml = MED_OPTIONS.map(m => {
+        const active = (entry.meds || []).includes(m.id);
+        return `
+          <button onclick="toggleDiaryArray('meds', '${m.id}')" class="py-2 px-3 rounded-2xl text-xs font-semibold border transition active:scale-95 flex items-center gap-1.5 ${
+            active
+              ? `${theme.pillActive} border-transparent`
+              : 'bg-slate-50 dark:bg-slate-900/60 border-slate-200/80 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+          }">
+            <span>${m.icon}</span>
+            <span>${m.label}</span>
+          </button>
+        `;
+      }).join('');
+
+      // Custom medications list
+      const customMedsHtml = (entry.customMeds || []).length > 0 ? `
+        <div class="flex flex-wrap gap-1.5 mt-2">
+          ${(entry.customMeds || []).map((txt, i) => `
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl ${theme.badgeBg} text-xs font-semibold">
+              <span>💊 ${escapeHtml(txt)}</span>
+              <button onclick="removeCustomMed(${i})" class="opacity-70 hover:opacity-100 font-bold">✕</button>
+            </span>
+          `).join('')}
+        </div>
+      ` : '';
+
+      // Symptoms chips
+      const symptomsHtml = SYMPTOM_OPTIONS.map(s => {
+        const active = (entry.symptoms || []).includes(s.id);
+        return `
+          <button onclick="toggleDiaryArray('symptoms', '${s.id}')" class="py-2 px-3 rounded-2xl text-xs font-semibold border transition active:scale-95 flex items-center gap-1.5 ${
+            active
+              ? `${theme.pillActive} border-transparent`
+              : 'bg-slate-50 dark:bg-slate-900/60 border-slate-200/80 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+          }">
+            <span>${s.icon}</span>
+            <span>${s.label}</span>
+          </button>
+        `;
+      }).join('');
+
+      // Moods chips
+      const moodsHtml = MOOD_OPTIONS.map(m => {
+        const active = (entry.moods || []).includes(m.id);
+        return `
+          <button onclick="toggleDiaryArray('moods', '${m.id}')" class="py-2 px-3 rounded-2xl text-xs font-semibold border transition active:scale-95 flex items-center gap-1.5 ${
+            active
+              ? `${theme.pillActive} border-transparent`
+              : 'bg-slate-50 dark:bg-slate-900/60 border-slate-200/80 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+          }">
+            <span>${m.icon}</span>
+            <span>${m.label}</span>
+          </button>
+        `;
+      }).join('');
+
+      // Recent entries
+      const recentDates = Object.keys(profile.diary)
+        .filter(d => hasDiaryData(profile.diary[d]))
+        .sort((a, b) => b.localeCompare(a))
+        .slice(0, 8);
+
+      const recentHtml = recentDates.length === 0
+        ? `<p class="text-xs text-slate-400 text-center py-4">Henüz günlük kaydı yok.</p>`
+        : recentDates.map(d => {
+            const e = profile.diary[d];
+            const flowObj = FLOW_OPTIONS.find(x => x.id === e.flow && x.id !== 'yok');
+            const medLabels = [
+              ...(e.meds || []).map(id => MED_OPTIONS.find(x => x.id === id)?.label).filter(Boolean),
+              ...(e.customMeds || [])
+            ];
+            const symLabels = (e.symptoms || []).map(id => SYMPTOM_OPTIONS.find(x => x.id === id)?.label).filter(Boolean);
+            const moodLabels = (e.moods || []).map(id => MOOD_OPTIONS.find(x => x.id === id)?.label).filter(Boolean);
+
+            return `
+              <div onclick="setDiaryDate('${d}')" class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200/60 dark:border-slate-700/70 cursor-pointer transition space-y-0.5">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-xs font-bold text-slate-900 dark:text-white">${formatDateShort(d)}</span>
+                  ${flowObj ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${theme.badgeBg}">${flowObj.icon} ${flowObj.label}</span>` : ''}
+                </div>
+                ${medLabels.length ? `<p class="text-[11px] text-slate-600 dark:text-slate-300"><span class="font-semibold">İlaç/Destek:</span> ${escapeHtml(medLabels.join(', '))}</p>` : ''}
+                ${symLabels.length ? `<p class="text-[11px] text-slate-600 dark:text-slate-300"><span class="font-semibold">Belirtiler:</span> ${symLabels.join(', ')}</p>` : ''}
+                ${moodLabels.length ? `<p class="text-[11px] text-slate-600 dark:text-slate-300"><span class="font-semibold">Ruh Hali:</span> ${moodLabels.join(', ')}</p>` : ''}
+                ${e.note ? `<p class="text-[11px] text-slate-500 dark:text-slate-400 pt-0.5 italic">"${escapeHtml(e.note)}"</p>` : ''}
+              </div>
+            `;
+          }).join('');
+
+      return `
+        <div class="p-3.5 space-y-3.5">
+          <!-- Profile Switcher -->
+          <div class="bg-slate-200/70 dark:bg-slate-800 p-1 rounded-2xl grid grid-cols-2 gap-1">
+            <button onclick="setDiaryProfile('p1')" class="py-2 rounded-xl text-xs font-bold transition ${pid === 'p1' ? THEMES.p1.pillActive : 'text-slate-600 dark:text-slate-400'}">
+              ${escapeHtml(appData.profiles.p1.name)}
+            </button>
+            <button onclick="setDiaryProfile('p2')" class="py-2 rounded-xl text-xs font-bold transition ${pid === 'p2' ? THEMES.p2.pillActive : 'text-slate-600 dark:text-slate-400'}">
+              ${escapeHtml(appData.profiles.p2.name)}
+            </button>
+          </div>
+
+          <!-- Date Stepper Bar -->
+          <div class="bg-white dark:bg-slate-800/70 rounded-2xl p-2.5 border border-slate-200/80 dark:border-slate-700/80 flex items-center justify-between gap-2 shadow-sm">
+            <button onclick="stepDiaryDate(-1)" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 active:scale-95 transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+            </button>
+            <div class="flex items-center gap-2">
+              <input type="date" value="${dateStr}" onchange="setDiaryDate(this.value)" class="text-xs font-bold text-slate-900 dark:text-white bg-transparent outline-none cursor-pointer" />
+              ${dateStr !== getTodayStr() ? `<button onclick="setDiaryDate(getTodayStr())" class="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-700 text-[10px] font-bold text-slate-600 dark:text-slate-200">Bugün</button>` : ''}
+            </div>
+            <button onclick="stepDiaryDate(1)" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 active:scale-95 transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+            </button>
+          </div>
+
+          <!-- Diary Form Card -->
+          <div class="bg-white dark:bg-slate-800/70 rounded-3xl p-4 border border-slate-200/80 dark:border-slate-700/80 shadow-sm space-y-4">
+            <!-- Flow -->
+            <div>
+              <h3 class="text-xs font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wide mb-2">Akıntı / Kanama Yoğunluğu</h3>
+              <div class="grid grid-cols-4 gap-1.5">
+                ${flowHtml}
+              </div>
+            </div>
+
+            <!-- Medications & Pain Relief -->
+            <div>
+              <h3 class="text-xs font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wide mb-2">İlaç & Ağrı Kesici Takibi</h3>
+              <div class="flex flex-wrap gap-2">
+                ${medsHtml}
+              </div>
+              <form onsubmit="addCustomMed(event)" class="flex items-center gap-2 mt-2.5">
+                <input id="custom-med-input" type="text" placeholder="Özel ilaç/saat ekle (örn. Parol 18:00)" class="flex-1 rounded-xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-700 px-3 py-2 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-rose-300" />
+                <button type="submit" class="px-3.5 py-2 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold active:scale-95 transition">Ekle</button>
+              </form>
+              ${customMedsHtml}
+            </div>
+
+            <!-- Symptoms -->
+            <div>
+              <h3 class="text-xs font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wide mb-2">Belirtiler</h3>
+              <div class="flex flex-wrap gap-2">
+                ${symptomsHtml}
+              </div>
+            </div>
+
+            <!-- Mood -->
+            <div>
+              <h3 class="text-xs font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wide mb-2">Ruh Hali</h3>
+              <div class="flex flex-wrap gap-2">
+                ${moodsHtml}
+              </div>
+            </div>
+
+            <!-- Personal Note -->
+            <div>
+              <h3 class="text-xs font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wide mb-2">Kişisel Not</h3>
+              <textarea id="diary-note-input" rows="3" placeholder="Bugün için özel bir not yazın..." class="w-full rounded-2xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-700 p-3 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-rose-300">${escapeHtml(entry.note || '')}</textarea>
+              <button onclick="saveDiaryNote()" class="mt-2.5 w-full py-2.5 rounded-2xl font-bold text-xs ${theme.btnPrimary} shadow-sm active:scale-[0.98] transition">
+                Notu Kaydet
+              </button>
+            </div>
+          </div>
+
+          <!-- Recent Entries -->
+          <div class="bg-white dark:bg-slate-800/70 rounded-3xl p-4 border border-slate-200/80 dark:border-slate-700/80 shadow-sm">
+            <h3 class="text-xs font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wide mb-3">Son Günlük Kayıtları</h3>
+            <div class="space-y-2.5">
+              ${recentHtml}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function ensureDiaryEntry(pid, dateStr) {
+      if (!appData.profiles[pid].diary[dateStr]) {
+        appData.profiles[pid].diary[dateStr] = { flow: 'yok', meds: [], customMeds: [], symptoms: [], moods: [], note: '' };
+      }
+      const e = appData.profiles[pid].diary[dateStr];
+      if (!Array.isArray(e.meds)) e.meds = [];
+      if (!Array.isArray(e.customMeds)) e.customMeds = [];
+      if (!Array.isArray(e.symptoms)) e.symptoms = [];
+      if (!Array.isArray(e.moods)) e.moods = [];
+      return e;
+    }
+
+    function setDiaryProfile(pid) { uiState.diaryProfile = pid; renderApp(); }
+    function setDiaryDate(ds) { if (ds) { uiState.diaryDate = ds; renderApp(); } }
+    function stepDiaryDate(delta) { uiState.diaryDate = addDays(uiState.diaryDate, delta); renderApp(); }
+
+    function setDiaryFlow(flowId) {
+      const e = ensureDiaryEntry(uiState.diaryProfile, uiState.diaryDate);
+      e.flow = flowId;
+      saveData();
+      showToast('Kaydedildi');
+      renderApp();
+    }
+
+    function toggleDiaryArray(field, itemId) {
+      const e = ensureDiaryEntry(uiState.diaryProfile, uiState.diaryDate);
+      const idx = e[field].indexOf(itemId);
+      if (idx > -1) e[field].splice(idx, 1);
+      else e[field].push(itemId);
+      saveData();
+      showToast('Kaydedildi');
+      renderApp();
+    }
+
+    function addCustomMed(ev) {
+      ev.preventDefault();
+      const input = document.getElementById('custom-med-input');
+      const val = input ? input.value.trim() : '';
+      if (!val) return;
+      const e = ensureDiaryEntry(uiState.diaryProfile, uiState.diaryDate);
+      e.customMeds.push(val);
+      saveData();
+      showToast('İlaç kaydedildi');
+      renderApp();
+    }
+
+    function removeCustomMed(index) {
+      const e = ensureDiaryEntry(uiState.diaryProfile, uiState.diaryDate);
+      e.customMeds.splice(index, 1);
+      saveData();
+      showToast('İlaç kaldırıldı');
+      renderApp();
+    }
+
+    function saveDiaryNote() {
+      const noteEl = document.getElementById('diary-note-input');
+      const e = ensureDiaryEntry(uiState.diaryProfile, uiState.diaryDate);
+      e.note = noteEl ? noteEl.value.trim() : '';
+      saveData();
+      showToast('Not kaydedildi');
+      renderApp();
+    }
+
+    /* ============================================================================
+       9. VIEW 5: AYARLAR & GİZLİLİK
+       ============================================================================ */
+    function renderSettingsView() {
+      const p1 = appData.profiles.p1;
+      const p2 = appData.profiles.p2;
+      const isDark = Boolean(appData.appearance.darkMode);
+
+      return `
+        <div class="p-3.5 space-y-3.5">
+          <!-- Appearance: Dark Mode -->
+          <div class="bg-white dark:bg-slate-800/70 rounded-3xl p-4 border border-slate-200/80 dark:border-slate-700/80 shadow-sm flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-bold text-slate-900 dark:text-white">Koyu Mod (Dark Mode)</h3>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400">Gece kullanımında göz yormayan koyu tema</p>
+            </div>
+            <button onclick="toggleDarkMode()" class="w-12 h-7 rounded-full transition-colors p-1 shrink-0 ${isDark ? 'bg-violet-600' : 'bg-slate-200'}">
+              <div class="w-5 h-5 rounded-full bg-white shadow-sm transform transition-transform ${isDark ? 'translate-x-5' : 'translate-x-0'}"></div>
+            </button>
+          </div>
+
+          <!-- Profile Settings -->
+          ${renderProfileSettingsCard(p1, THEMES.p1, 'Yasemin (Üst Kart)')}
+          ${renderProfileSettingsCard(p2, THEMES.p2, 'Elif (Alt Kart)')}
+
+          <!-- Security / PIN Lock -->
+          <div class="bg-white dark:bg-slate-800/70 rounded-3xl p-4 border border-slate-200/80 dark:border-slate-700/80 shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-sm font-bold text-slate-900 dark:text-white">4 Haneli PIN Kilidi</h3>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400">Uygulama açılışında gizlilik şifresi ister</p>
+              </div>
+              <button onclick="togglePinSetting()" class="w-12 h-7 rounded-full transition-colors p-1 shrink-0 ${appData.security.pinEnabled ? 'bg-rose-600' : 'bg-slate-200 dark:bg-slate-700'}">
+                <div class="w-5 h-5 rounded-full bg-white shadow-sm transform transition-transform ${appData.security.pinEnabled ? 'translate-x-5' : 'translate-x-0'}"></div>
+              </button>
+            </div>
+            ${appData.security.pinEnabled ? `
+              <button onclick="startPinSetup()" class="w-full py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-200 transition">
+                PIN Kodunu Değiştir
+              </button>
+            ` : ''}
+          </div>
+
+          <!-- Data Management -->
+          <div class="bg-white dark:bg-slate-800/70 rounded-3xl p-4 border border-slate-200/80 dark:border-slate-700/80 shadow-sm space-y-2.5">
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white">Veri Yönetimi & Yedekleme</h3>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 mb-2">Veriler yalnızca bu cihazın tarayıcısında saklanır, internete gönderilmez.</p>
+
+            <button onclick="exportBackupJson()" class="w-full py-2.5 px-4 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold flex items-center justify-center gap-2 active:scale-[0.98] transition">
+              <span>JSON Yedekle (İndir)</span>
+            </button>
+
+            <button onclick="document.getElementById('json-file-input').click()" class="w-full py-2.5 px-4 rounded-2xl bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-100 text-xs font-bold flex items-center justify-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-600 active:scale-[0.98] transition">
+              <span>Yedekten Geri Yükle</span>
+            </button>
+
+            <button onclick="openResetConfirmModal()" class="w-full py-2.5 px-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800/70 text-xs font-bold flex items-center justify-center gap-2 active:scale-[0.98] transition">
+              <span>Verileri Sıfırla</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderProfileSettingsCard(profile, theme, subtitle) {
+      return `
+        <div class="bg-white dark:bg-slate-800/70 rounded-3xl p-4 border ${theme.border} shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full ${theme.barSolid}"></span>
+              <h3 class="text-sm font-bold text-slate-900 dark:text-white">${subtitle}</h3>
+            </div>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${theme.badgeBg}">${escapeHtml(profile.name)}</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Varsayılan Döngü (Gün)</label>
+              <input type="number" min="20" max="45" value="${profile.defaultCycleLength}" onchange="updateProfileField('${profile.id}', 'defaultCycleLength', parseInt(this.value, 10) || 28)" class="w-full rounded-xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-700 px-3 py-2 text-xs font-bold text-slate-900 dark:text-white" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">Varsayılan Regl (Gün)</label>
+              <input type="number" min="2" max="12" value="${profile.defaultPeriodLength}" onchange="updateProfileField('${profile.id}', 'defaultPeriodLength', parseInt(this.value, 10) || 5)" class="w-full rounded-xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-700 px-3 py-2 text-xs font-bold text-slate-900 dark:text-white" />
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-1">
+            <div class="pr-3">
+              <p class="text-xs font-bold text-slate-800 dark:text-slate-200">Sade Mod</p>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400">Ovülasyon ve doğurganlık göstergelerini gizler</p>
+            </div>
+            <button onclick="updateProfileField('${profile.id}', 'sadeMod', ${!profile.sadeMod})" class="w-12 h-7 rounded-full transition-colors p-1 shrink-0 ${profile.sadeMod ? theme.barSolid : 'bg-slate-200 dark:bg-slate-700'}">
+              <div class="w-5 h-5 rounded-full bg-white shadow-sm transform transition-transform ${profile.sadeMod ? 'translate-x-5' : 'translate-x-0'}"></div>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function updateProfileField(pid, field, value) {
+      appData.profiles[pid][field] = value;
+      saveData();
+      showToast('Ayar güncellendi');
+      renderApp();
+    }
+
+    /* ============================================================================
+       10. MODALS & BOTTOM SHEETS
+       ============================================================================ */
+    function openModal(html) {
+      const overlay = document.getElementById('modal-overlay');
+      const content = document.getElementById('modal-content');
+      content.innerHTML = html;
+      overlay.classList.remove('hidden');
+      overlay.classList.add('flex');
+    }
+
+    function closeModal() {
+      const overlay = document.getElementById('modal-overlay');
+      overlay.classList.add('hidden');
+      overlay.classList.remove('flex');
+    }
+
+    function closeModalOnBackdrop(e) {
+      if (e.target.id === 'modal-overlay') closeModal();
+    }
+
+    function openDaySheet(dateStr) {
+      const profilesToShow = uiState.calendarMode === 'shared'
+        ? [appData.profiles.p1, appData.profiles.p2]
+        : [appData.profiles[uiState.calendarMode]];
+
+      const blocks = profilesToShow.map(profile => {
+        const stats = computeProfileStats(profile);
+        const theme = THEMES[profile.id];
+        const log = stats.loggedDaysMap[dateStr];
+        const proj = stats.projectedDaysMap[dateStr];
+        const fertile = !profile.sadeMod ? stats.fertileDaysMap[dateStr] : null;
+        const diary = profile.diary[dateStr];
+
+        let statusText = 'Normal gün';
+        if (log) statusText = `Regl ${log.dayNum}. gün ${log.ignored ? '(Yoksayıldı)' : ''}`;
+        else if (proj) statusText = `Tahmini regl ${proj.dayNum}. gün`;
+        else if (fertile === 'ovulation') statusText = '🌸 Tahmini Ovülasyon';
+        else if (fertile === 'fertile') statusText = '🟢 Doğurganlık Penceresi';
+
+        let diarySummary = '';
+        if (hasDiaryData(diary)) {
+          const meds = [
+            ...(diary.meds || []).map(id => MED_OPTIONS.find(x => x.id === id)?.label).filter(Boolean),
+            ...(diary.customMeds || [])
+          ].join(', ');
+          const sym = (diary.symptoms || []).map(id => SYMPTOM_OPTIONS.find(x => x.id === id)?.label).filter(Boolean).join(', ');
+          const mood = (diary.moods || []).map(id => MOOD_OPTIONS.find(x => x.id === id)?.label).filter(Boolean).join(', ');
+          diarySummary = `
+            <div class="mt-2 p-2.5 rounded-xl bg-white/90 dark:bg-slate-900/70 border border-slate-200/70 dark:border-slate-700 text-[11px] text-slate-600 dark:text-slate-300 space-y-0.5">
+              ${meds ? `<p><strong>İlaç:</strong> ${escapeHtml(meds)}</p>` : ''}
+              ${sym ? `<p><strong>Belirti:</strong> ${sym}</p>` : ''}
+              ${mood ? `<p><strong>Ruh Hali:</strong> ${mood}</p>` : ''}
+              ${diary.note ? `<p class="italic">"${escapeHtml(diary.note)}"</p>` : ''}
+            </div>
+          `;
+        }
+
+        return `
+          <div class="p-3.5 rounded-2xl border ${theme.border} ${theme.cardBg}">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-sm font-bold text-slate-900 dark:text-white">${escapeHtml(profile.name)}</span>
+              <span class="text-[11px] font-bold ${theme.accentText}">${statusText}</span>
+            </div>
+            ${diarySummary}
+            <div class="flex items-center gap-2 mt-3">
+              <button onclick="closeModal(); openAddPeriodModal('${profile.id}', ${log ? `'${log.periodId}'` : 'null'}, '${dateStr}')" class="flex-1 py-2 rounded-xl text-[11px] font-bold ${theme.btnPrimary} active:scale-95 transition">
+                ${log ? 'Regl Kaydını Düzenle' : 'Bu Tarihte Regl Başlat'}
+              </button>
+              <button onclick="closeModal(); uiState.diaryProfile='${profile.id}'; uiState.diaryDate='${dateStr}'; switchTab('diary');" class="py-2 px-3 rounded-xl text-[11px] font-bold ${theme.btnSoft} active:scale-95 transition">
+                Günlük / İlaç
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      openModal(`
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="text-base font-extrabold text-slate-900 dark:text-white">${formatDateFull(dateStr)}</h3>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400">Günlük detay ve hızlı işlemler</p>
+          </div>
+          <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 flex items-center justify-center font-bold">✕</button>
+        </div>
+        <div class="space-y-3">
+          ${blocks}
+        </div>
+      `);
+    }
+
+    function openAddPeriodModal(defaultProfileId = null, editPeriodId = null, presetStartDate = null) {
+      const pid = defaultProfileId || (uiState.activeTab === 'analytics' ? uiState.analyticsProfile : 'p1');
+      const profile = appData.profiles[pid];
+      const existing = editPeriodId ? profile.periods.find(p => p.id === editPeriodId) : null;
+
+      const startVal = existing ? existing.startDate : (presetStartDate || getTodayStr());
+      const endVal = existing ? (existing.endDate || '') : '';
+      const ignoredVal = existing ? existing.ignored : false;
+
+      openModal(`
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-base font-extrabold text-slate-900 dark:text-white">${existing ? 'Regl Kaydını Düzenle' : 'Yeni Regl Kaydı Ekle'}</h3>
+          <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 flex items-center justify-center font-bold">✕</button>
+        </div>
+
+        <form onsubmit="submitPeriodForm(event, '${existing ? existing.id : ''}')" class="space-y-3.5">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Kişi Seçin</label>
+            <select id="period-form-profile" ${existing ? 'disabled' : ''} class="w-full rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3.5 py-2.5 text-xs font-bold text-slate-900 dark:text-white">
+              <option value="p1" ${pid === 'p1' ? 'selected' : ''}>${escapeHtml(appData.profiles.p1.name)}</option>
+              <option value="p2" ${pid === 'p2' ? 'selected' : ''}>${escapeHtml(appData.profiles.p2.name)}</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Başlangıç Tarihi *</label>
+              <input id="period-form-start" type="date" required value="${startVal}" class="w-full rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-2.5 text-xs font-bold text-slate-900 dark:text-white" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Bitiş Tarihi (Opsiyonel)</label>
+              <input id="period-form-end" type="date" value="${endVal}" class="w-full rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-2.5 text-xs font-bold text-slate-900 dark:text-white" />
+            </div>
+          </div>
+          <p class="text-[10px] text-slate-400 -mt-2">Regl hâlâ devam ediyorsa bitiş tarihini boş bırakabilirsiniz.</p>
+
+          <label class="flex items-center gap-2.5 p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 cursor-pointer">
+            <input id="period-form-ignored" type="checkbox" ${ignoredVal ? 'checked' : ''} class="w-4 h-4 rounded accent-rose-600" />
+            <div>
+              <span class="block text-xs font-bold text-slate-800 dark:text-slate-100">Ortalamadan Hariç Tut (Yoksay)</span>
+              <span class="block text-[10px] text-slate-500 dark:text-slate-400">Düzensiz veya çok kısa bir döngüyse ortalamayı bozmaz.</span>
+            </div>
+          </label>
+
+          <div class="flex items-center gap-2 pt-2">
+            ${existing ? `
+              <button type="button" onclick="deletePeriod('${pid}', '${existing.id}')" class="py-3 px-4 rounded-2xl bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 font-bold text-xs border border-rose-200 dark:border-rose-800 active:scale-95 transition">
+                Sil
+              </button>
+            ` : ''}
+            <button type="submit" class="flex-1 py-3 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-xs shadow-md active:scale-95 transition">
+              ${existing ? 'Değişiklikleri Kaydet' : 'Kaydı Ekle'}
+            </button>
+          </div>
+        </form>
+      `);
+    }
+
+    function submitPeriodForm(e, editId) {
+      e.preventDefault();
+      const pid = document.getElementById('period-form-profile').value;
+      const startDate = document.getElementById('period-form-start').value;
+      const endDate = document.getElementById('period-form-end').value || null;
+      const ignored = document.getElementById('period-form-ignored').checked;
+
+      if (!startDate) return;
+      if (endDate && endDate < startDate) {
+        showToast('Bitiş tarihi başlangıçtan önce olamaz', true);
+        return;
+      }
+
+      const profile = appData.profiles[pid];
+      if (editId) {
+        const item = profile.periods.find(p => p.id === editId);
+        if (item) {
+          item.startDate = startDate;
+          item.endDate = endDate;
+          item.ignored = ignored;
+        }
+        showToast('Regl kaydı güncellendi');
+      } else {
+        profile.periods.push({ id: generateId(), startDate, endDate, ignored });
+        showToast('Yeni regl kaydı eklendi');
+      }
+
+      saveData();
+      closeModal();
+      renderApp();
+    }
+
+    function deletePeriod(pid, periodId) {
+      appData.profiles[pid].periods = appData.profiles[pid].periods.filter(p => p.id !== periodId);
+      saveData();
+      closeModal();
+      showToast('Kayıt silindi');
+      renderApp();
+    }
+
+    function openResetConfirmModal() {
+      openModal(`
+        <div class="text-center space-y-3 py-2">
+          <div class="w-12 h-12 rounded-2xl bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-300 flex items-center justify-center mx-auto text-xl">⚠️</div>
+          <h3 class="text-base font-extrabold text-slate-900 dark:text-white">Veriler Sıfırlansın mı?</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            Yasemin ve Elif isimleri korunur. İsterseniz tamamen boş başlayabilir veya örnek verilere dönebilirsiniz.
+          </p>
+          <div class="flex flex-col gap-2 pt-2">
+            <button onclick="resetAllData(false)" class="w-full py-3 rounded-2xl bg-rose-600 text-white text-xs font-bold active:scale-95 transition">
+              Temiz Başlangıç Yap (Tüm Kayıtları Sil)
+            </button>
+            <button onclick="resetAllData(true)" class="w-full py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold active:scale-95 transition">
+              Örnek Verilere Sıfırla
+            </button>
+            <button onclick="closeModal()" class="w-full py-2 text-xs font-semibold text-slate-400">
+              Vazgeç
+            </button>
+          </div>
+        </div>
+      `);
+    }
+
+    function resetAllData(withSample) {
+      const keepDark = Boolean(appData.appearance && appData.appearance.darkMode);
+      if (withSample) {
+        appData = createSampleData();
+        appData.appearance.darkMode = keepDark;
+      } else {
+        appData = {
+          isSampleData: false,
+          appearance: { darkMode: keepDark },
+          security: { pinEnabled: false, pinCode: '' },
+          profiles: {
+            p1: { id: 'p1', name: 'Yasemin', defaultCycleLength: 30, defaultPeriodLength: 5, sadeMod: false, periods: [], diary: {} },
+            p2: { id: 'p2', name: 'Elif', defaultCycleLength: 29, defaultPeriodLength: 5, sadeMod: true, periods: [], diary: {} }
+          }
+        };
+      }
+      saveData();
+      closeModal();
+      showToast(withSample ? 'Örnek veriler yüklendi' : 'Tüm veriler temizlendi');
+      renderApp();
+    }
+
+    /* ============================================================================
+       11. JSON BACKUP & RESTORE
+       ============================================================================ */
+    function exportBackupJson() {
+      try {
+        const blob = new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `yasemin_elif_yedek_${getTodayStr()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('JSON yedeği indirildi');
+      } catch (err) {
+        showToast('Yedekleme sırasında hata oluştu', true);
+      }
+    }
+
+    function handleImportFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (!parsed.profiles || !parsed.profiles.p1 || !parsed.profiles.p2) {
+            throw new Error('Geçersiz yedek formatı');
+          }
+          if (!parsed.appearance) parsed.appearance = { darkMode: false };
+          appData = parsed;
+          saveData();
+          applyThemeClass();
+          showToast('Yedek başarıyla geri yüklendi');
+          renderApp();
+        } catch (err) {
+          showToast('Geçersiz JSON yedek dosyası', true);
+        }
+        event.target.value = '';
+      };
+      reader.readAsText(file);
+    }
+
+    /* ============================================================================
+       12. PIN LOCK SYSTEM
+       ============================================================================ */
+    let pinMode = 'unlock';
+    let pinBuffer = '';
+    let pinTempFirst = '';
+
+    function showPinScreen(mode) {
+      pinMode = mode;
+      pinBuffer = '';
+      pinTempFirst = '';
+      const screen = document.getElementById('pin-lock-screen');
+      const title = document.getElementById('pin-title');
+      const sub = document.getElementById('pin-subtitle');
+      const cancelBtn = document.getElementById('pin-cancel-btn');
+      document.getElementById('pin-error').textContent = '';
+
+      if (mode === 'unlock') {
+        title.textContent = 'Uygulama Kilitli';
+        sub.textContent = 'Devam etmek için 4 haneli PIN kodunuzu girin';
+        cancelBtn.classList.add('invisible');
+      } else {
+        title.textContent = 'Yeni PIN Oluştur';
+        sub.textContent = '4 haneli bir PIN kodu belirleyin';
+        cancelBtn.classList.remove('invisible');
+      }
+      updatePinDots();
+      screen.classList.remove('hidden');
+      screen.classList.add('flex');
+    }
+
+    function hidePinScreen() {
+      const screen = document.getElementById('pin-lock-screen');
+      screen.classList.add('hidden');
+      screen.classList.remove('flex');
+    }
+
+    function togglePinSetting() {
+      if (appData.security.pinEnabled) {
+        appData.security.pinEnabled = false;
+        appData.security.pinCode = '';
+        saveData();
+        showToast('PIN kilidi kapatıldı');
+        renderApp();
+      } else {
+        startPinSetup();
+      }
+    }
+
+    function startPinSetup() { showPinScreen('setup_1'); }
+    function cancelPinSetup() { if (pinMode !== 'unlock') hidePinScreen(); }
+    function lockAppManually() { if (appData.security.pinEnabled) showPinScreen('unlock'); }
+
+    function pressPinKey(digit) {
+      if (pinBuffer.length >= 4) return;
+      pinBuffer += digit;
+      document.getElementById('pin-error').textContent = '';
+      updatePinDots();
+      if (pinBuffer.length === 4) setTimeout(handleCompletePin, 140);
+    }
+
+    function backspacePin() {
+      pinBuffer = pinBuffer.slice(0, -1);
+      updatePinDots();
+    }
+
+    function updatePinDots() {
+      const dots = document.getElementById('pin-dots').children;
+      for (let i = 0; i < 4; i++) {
+        dots[i].className = i < pinBuffer.length
+          ? 'w-3.5 h-3.5 rounded-full bg-rose-600 border-2 border-rose-600 scale-110 transition-all'
+          : 'w-3.5 h-3.5 rounded-full border-2 border-slate-300 dark:border-slate-600 transition-all';
+      }
+    }
+
+    function handleCompletePin() {
+      const errEl = document.getElementById('pin-error');
+      if (pinMode === 'unlock') {
+        if (pinBuffer === appData.security.pinCode) {
+          hidePinScreen();
+        } else {
+          errEl.textContent = 'Hatalı PIN kodu, tekrar deneyin.';
+          pinBuffer = '';
+          updatePinDots();
+        }
+      } else if (pinMode === 'setup_1') {
+        pinTempFirst = pinBuffer;
+        pinBuffer = '';
+        pinMode = 'setup_2';
+        document.getElementById('pin-title').textContent = 'PIN Kodunu Onayla';
+        document.getElementById('pin-subtitle').textContent = 'Aynı 4 haneli kodu tekrar girin';
+        updatePinDots();
+      } else if (pinMode === 'setup_2') {
+        if (pinBuffer === pinTempFirst) {
+          appData.security.pinEnabled = true;
+          appData.security.pinCode = pinBuffer;
+          saveData();
+          hidePinScreen();
+          showToast('PIN kilidi aktif edildi');
+          renderApp();
+        } else {
+          errEl.textContent = 'Kodlar eşleşmedi, baştan deneyin.';
+          pinMode = 'setup_1';
+          pinBuffer = '';
+          pinTempFirst = '';
+          document.getElementById('pin-title').textContent = 'Yeni PIN Oluştur';
+          document.getElementById('pin-subtitle').textContent = '4 haneli bir PIN kodu belirleyin';
+          updatePinDots();
+        }
+      }
+    }
+
+    /* ============================================================================
+       13. UTILITIES & BOOTSTRAP
+       ============================================================================ */
+    let toastTimer = null;
+    function showToast(msg, isError = false) {
+      const el = document.getElementById('toast');
+      const txt = document.getElementById('toast-text');
+      txt.textContent = msg;
+      el.className = `fixed top-16 left-1/2 -translate-x-1/2 z-[70] px-4 py-2.5 rounded-2xl text-xs font-semibold shadow-lg transition-all duration-200 flex items-center gap-2 whitespace-nowrap ${
+        isError ? 'bg-rose-600 text-white' : 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
+      }`;
+      el.style.opacity = '1';
+      el.style.transform = 'translate(-50%, 0)';
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transform = 'translate(-50%, -8px)';
+      }, 2200);
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadData();
+      renderApp();
+      if (appData.security.pinEnabled && appData.security.pinCode) {
+        showPinScreen('unlock');
+      }
+    });
+  </script>
+</body>
+</html>
